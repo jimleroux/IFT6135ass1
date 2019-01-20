@@ -1,2 +1,2 @@
-# IFT6135
+# Cats and dogs classification
 First assignment for the class IFT6135
