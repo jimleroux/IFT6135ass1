@@ -1,2 +1,2 @@
-# IFT6135ass1
-First assignement for the class IFT6135
+# IFT6135
+First assignment for the class IFT6135
