@@ -94,10 +94,10 @@ def train(cnn, full_data, num_epoch=20, lr=0.01):
 	"""
 	split = [int(0.8*len(full_data)), len(full_data)-int(0.8*len(full_data))]
 	train, valid = torch.utils.data.dataset.random_split(full_data, split)
-	trainloader = torch.utils.data.DataLoader(train, batch_size=128,
-		shuffle=True, num_workers=0)
-	validloader = torch.utils.data.DataLoader(valid, batch_size=128,
-		shuffle=True, num_workers=0)
+	trainloader = torch.utils.data.DataLoader(train, batch_size=64,
+		shuffle=True, num_workers=4)
+	validloader = torch.utils.data.DataLoader(valid, batch_size=64,
+		shuffle=True, num_workers=4)
 
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(cnn.parameters(), lr=lr)
