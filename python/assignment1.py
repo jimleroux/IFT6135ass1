@@ -186,4 +186,4 @@ if __name__ == '__main__':
 	plt.xlabel('Epoch')
 	plt.ylabel('Error')
 	plt.legend(fontsize=25)
-	plt.show()
+	plt.savefig("acc")
