@@ -19,6 +19,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 import time
 import csv
+import os
+
+CURRENT_DIR = os.getcwd()
 
 class Net(nn.Module):
     def __init__(self):
@@ -57,20 +60,21 @@ class Net(nn.Module):
         x = self.fc2(x)
         return x
 
-class kaggle_dataset(torch.utils.data.dataset.Dataset):
-    def __init__(self, data, labels, transforms=None):
-        self.data = data
-        self.labels = labels
+class cat_dataset(torch.utils.data.dataset.Dataset):
+    def __init__(self, transforms=None):
+        os.chdir("../dataset/trainset/Cat")
+        self.data = torchvision.dataset.ImageFolder(os.getcwd())
+        os.chdir(CURRENT_DIR)
         self.transforms = transforms
 
     def __getitem__(self, index):
         dat = self.data[index]
         if self.transforms is not None:
             dat = self.transforms(dat)
-        return (dat,self.labels[index])
+        return (dat,0)
    
     def __len__(self):
         return len(self.data)
 
 if __name__ == '__main__':
-	pass
+	cats = cat_dataset()
