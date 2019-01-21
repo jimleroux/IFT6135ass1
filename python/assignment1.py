@@ -174,7 +174,7 @@ if __name__ == '__main__':
 	
 	# Create, load and split the datas.
 	full_data = dataset(transforms=transform)
-	CNN = ConvNet()
+	CNN = ConvNet().to(device)
 	
 	n_epoch = 1
 	loss_train, loss_valid, e_train, e_valid = train(CNN, full_data,
