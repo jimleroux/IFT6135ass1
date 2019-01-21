@@ -175,14 +175,14 @@ if __name__ == '__main__':
 	full_data = dataset(transforms=transform)
 	CNN = ConvNet().to(device)
 	
-	n_epoch = 1
+	n_epoch = 10
 	loss_train, loss_valid, e_train, e_valid = train(CNN, full_data,
 		num_epoch=n_epoch)
 	
 	plt.figure()
-	plt.plot(range(1,num_epoch+1),e_train, 'sk-', label='Train')
-	plt.plot(range(1, num_epoch+1),e_valid, 'sr-', label='Valid')
+	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
+	plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')
 	plt.xlabel('Epoch')
 	plt.ylabel('Error')
 	plt.legend(fontsize=25)
-	plt.savefig("acc")
+	plt.show()
