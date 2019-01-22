@@ -104,9 +104,9 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 	split = [int(0.8*len(full_data)), len(full_data)-int(0.8*len(full_data))]
 	train, valid = torch.utils.data.dataset.random_split(full_data, split)
 	trainloader = torch.utils.data.DataLoader(
-		train, batch_size=16, shuffle=True)
+		train, batch_size=64, shuffle=True)
 	validloader = torch.utils.data.DataLoader(
-		valid, batch_size=16, shuffle=True)
+		valid, batch_size=64, shuffle=True)
 
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(cnn.parameters(), lr=lr)
@@ -121,7 +121,7 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 			inputs, labels = data
 			optimizer.zero_grad()
 			outputs = cnn(inputs.to(device))
-			loss = criterion(outputs, labels.to(device)) + 0.01*l2(cnn)
+			loss = criterion(outputs, labels.to(device)) + 0.0*l2(cnn)
 			loss.backward()
 			optimizer.step()
 
@@ -197,7 +197,7 @@ if __name__ == '__main__':
 	full_data = dataset(transforms=transform)
 	CNN = ConvNet().to(device)
 	
-	n_epoch = 10
+	n_epoch = 20
 	loss_train, loss_valid, e_train, e_valid = train(
 		CNN, full_data, num_epoch=n_epoch)
 	
