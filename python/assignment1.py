@@ -82,7 +82,7 @@ class dataset(torch.utils.data.dataset.Dataset):
 	def __len__(self):
 		return len(self.data)
 
-def train(cnn, full_data, num_epoch=20, lr=0.00001):
+def train(cnn, full_data, num_epoch=20, lr=0.1):
 	"""
 	Train function for the network.
 
