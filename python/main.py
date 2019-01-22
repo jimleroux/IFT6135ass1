@@ -136,12 +136,16 @@ if __name__ == '__main__':
 		transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 	
 	# Create, load and split the datas.
-	full_data = dataset(transforms=transform)
+	cat_dog_data = dataset(transforms=transform)
+	mnist_data = torchvision.datasets.MNIST(
+		root='./data', train=True, download=True, transform=transform)	
+	
+	# Create the models
 	CNN = cnn.ConvNet().to(device)
 	
-	n_epoch = 70
+	n_epoch = 10
 	loss_train, loss_valid, e_train, e_valid = train(
-		CNN, full_data, num_epoch=n_epoch)
+		CNN, mnist_data, num_epoch=n_epoch)
 	
 	plt.figure()
 	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
