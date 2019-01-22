@@ -72,8 +72,8 @@ class ConvNet(nn.Module):
 class dataset(torch.utils.data.dataset.Dataset):
 	def __init__(self, transforms=None):
 		os.chdir("../dataset/trainset/")
-		self.data = torchvision.datasets.ImageFolder(os.getcwd(),
-			transform=transforms)
+		self.data = torchvision.datasets.ImageFolder(
+			os.getcwd(), transform=transforms)
 		os.chdir(CURRENT_DIR)
 
 	def __getitem__(self, idx):
@@ -103,10 +103,10 @@ def train(cnn, full_data, num_epoch=20, lr=0.001):
 	"""
 	split = [int(0.8*len(full_data)), len(full_data)-int(0.8*len(full_data))]
 	train, valid = torch.utils.data.dataset.random_split(full_data, split)
-	trainloader = torch.utils.data.DataLoader(train, batch_size=64,
-		shuffle=True)
-	validloader = torch.utils.data.DataLoader(valid, batch_size=64,
-		shuffle=True)
+	trainloader = torch.utils.data.DataLoader(
+		train, batch_size=64, shuffle=True)
+	validloader = torch.utils.data.DataLoader(
+		valid, batch_size=64, shuffle=True)
 
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(cnn.parameters(), lr=lr)
@@ -151,7 +151,7 @@ def train(cnn, full_data, num_epoch=20, lr=0.001):
 				total += labels.size(0)
 				correct += (predicted == labels.to(device)).sum().item()
 				loss = criterion(outputs, labels.to(device))
-				running_loss_valid += loss.item()/len(valid)
+				running_loss_valid += loss.item() / len(valid)
 		err_valid.append(1 - correct / total)
 		
 		loss_train.append(running_loss_train)
@@ -163,7 +163,6 @@ def train(cnn, full_data, num_epoch=20, lr=0.001):
 		   loss_valid[epoch], err_valid[epoch]))
 
 	print('Finished Training')
-
 	return loss_train, loss_valid, err_train, err_valid
 
 if __name__ == '__main__':
