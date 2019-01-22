@@ -21,8 +21,6 @@ import time
 import csv
 import os
 
-CURRENT_DIR = os.getcwd()
-
 class ConvNet(nn.Module):
 	def __init__(self):
 		super(ConvNet, self).__init__()
@@ -69,7 +67,7 @@ class ConvNet(nn.Module):
 			output = dense(output)
 		return output 
 
-	def train(self, full_data, num_epoch=20, lr=0.1):
+	def train_(self, full_data, num_epoch=20, lr=0.1):
 		"""
 		Train function for the network.
 
