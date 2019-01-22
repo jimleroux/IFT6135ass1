@@ -109,7 +109,6 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 		valid, batch_size=64, shuffle=True)
 
 	criterion = nn.CrossEntropyLoss()
-	optimizer = optim.SGD(cnn.parameters(), lr=lr)
 	
 	loss_train = []
 	loss_valid = []
@@ -117,6 +116,8 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 	err_valid = []
 	for epoch in range(num_epoch):
 		cnn.train()
+		lrd = lr / (1 + 9*epoch/num_epoch)
+		optimizer = optim.SGD(cnn.parameters(), lr=lr)		
 		for data in trainloader:
 			inputs, labels = data
 			optimizer.zero_grad()
