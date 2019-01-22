@@ -22,6 +22,8 @@ import csv
 import os
 import cnn
 
+CURRENT_DIR = os.getcwd()
+
 class dataset(torch.utils.data.dataset.Dataset):
 	def __init__(self, transforms=None):
 		os.chdir("../dataset/trainset/")
