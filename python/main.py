@@ -73,8 +73,8 @@ def train(model, full_data, num_epoch=20, lr=0.1):
 			model.train()
 			lrd = lr / (1 + 9*epoch/num_epoch)
 			optimizer = optim.SGD(model.parameters(), lr=lr)		
-			for data in trainloader:
-				inputs, labels = data
+			for datas in trainloader:
+				inputs, labels = datas
 				optimizer.zero_grad()
 				outputs = model(inputs.to(device))
 				loss = criterion(outputs, labels.to(device))
@@ -87,22 +87,22 @@ def train(model, full_data, num_epoch=20, lr=0.1):
 			total = 0.
 			model.eval()
 			with torch.no_grad():
-				for data in trainloader:
-					images, labels = data
-					outputs = self(images.to(device))
+				for datas in trainloader:
+					inputs, labels = datas
+					outputs = model(inputs.to(device))
 					_, predicted = torch.max(outputs.data, 1)
 					total += labels.size(0)
 					correct += (predicted == labels.to(device)).sum().item()
 					loss = criterion(outputs, labels.to(device))
-					running_loss_train += loss.item()/len(train)
+					running_loss_train += loss.item() / len(train)
 			err_train.append(1 - correct / total)
 			
 			correct = 0.
 			total = 0.
 			with torch.no_grad():
-				for data in validloader:
-					images, labels = data
-					outputs = self(images.to(device))
+				for datas in validloader:
+					inputs, labels = datas
+					outputs = model(inputs.to(device))
 					_, predicted = torch.max(outputs.data, 1)
 					total += labels.size(0)
 					correct += (predicted == labels.to(device)).sum().item()
