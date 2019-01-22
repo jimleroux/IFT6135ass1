@@ -57,7 +57,7 @@ class ConvNet(nn.Module):
 			nn.Linear(512 * 4 * 4, 1024),
 			nn.ReLU(),
 			#nn.BatchNorm1d(1024),
-			nn.Dropout2d(p=0.20),
+			#nn.Dropout2d(p=0.20),
 			nn.Linear(1024, 2))
 			
 	def forward(self, x):
@@ -121,10 +121,7 @@ def train(cnn, full_data, num_epoch=20, lr=0.0001):
 			inputs, labels = data
 			optimizer.zero_grad()
 			outputs = cnn(inputs.to(device))
-			l2 = 0
-			for par in cnn.parameters():
-				l2 += 0.00001*(par**2).sum()
-			loss = criterion(outputs, labels.to(device)) + l2
+			loss = criterion(outputs, labels.to(device))
 			loss.backward()
 			optimizer.step()
 
