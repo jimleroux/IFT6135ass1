@@ -82,7 +82,7 @@ class dataset(torch.utils.data.dataset.Dataset):
 	def __len__(self):
 		return len(self.data)
 
-def train(cnn, full_data, num_epoch=20, lr=0.01):
+def train(cnn, full_data, num_epoch=20, lr=0.0001):
 	"""
 	Train function for the network.
 
@@ -123,7 +123,7 @@ def train(cnn, full_data, num_epoch=20, lr=0.01):
 			outputs = cnn(inputs.to(device))
 			l2 = 0
 			for par in cnn.parameters():
-				l2 += 0.001*(par**2).sum()
+				l2 += 0.00001*(par**2).sum()
 			loss = criterion(outputs, labels.to(device)) + l2
 			loss.backward()
 			optimizer.step()
