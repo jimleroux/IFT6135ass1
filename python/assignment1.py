@@ -198,7 +198,7 @@ if __name__ == '__main__':
 	full_data = dataset(transforms=transform)
 	CNN = ConvNet().to(device)
 	
-	n_epoch = 50
+	n_epoch = 70
 	loss_train, loss_valid, e_train, e_valid = train(
 		CNN, full_data, num_epoch=n_epoch)
 	
