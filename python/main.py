@@ -143,9 +143,9 @@ if __name__ == '__main__':
 	# Create the models
 	CNN = cnn.ConvNet().to(device)
 	
-	n_epoch = 10
+	n_epoch = 70
 	loss_train, loss_valid, e_train, e_valid = train(
-		CNN, mnist_data, num_epoch=n_epoch)
+		CNN, cat_dog_data, num_epoch=n_epoch)
 	
 	plt.figure()
 	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
