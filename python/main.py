@@ -57,7 +57,7 @@ if __name__ == '__main__':
 	
 	n_epoch = 70
 	loss_train, loss_valid, e_train, e_valid = CNN.train(
-		CNN, full_data, num_epoch=n_epoch)
+		full_data, num_epoch=n_epoch)
 	
 	plt.figure()
 	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
