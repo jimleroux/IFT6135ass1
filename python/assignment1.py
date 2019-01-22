@@ -121,7 +121,7 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 			inputs, labels = data
 			optimizer.zero_grad()
 			outputs = cnn(inputs.to(device))
-			loss = criterion(outputs, labels.to(device)) + l2(cnn)
+			loss = criterion(outputs, labels.to(device)) + 0.01*l2(cnn)
 			loss.backward()
 			optimizer.step()
 
@@ -174,7 +174,7 @@ def l2(cnn):
 		if dense.weight is not None:
 			loss += torhc.sum(dense.weight**2)
 	return loss
-	
+
 if __name__ == '__main__':
 	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	torch.cuda.manual_seed(10)
