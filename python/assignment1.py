@@ -121,7 +121,10 @@ def train(cnn, full_data, num_epoch=20, lr=0.001):
 			inputs, labels = data
 			optimizer.zero_grad()
 			outputs = cnn(inputs.to(device))
-			loss = criterion(outputs, labels.to(device))
+			l2 = 0
+			for par in cnn.parameters():
+				l2 += (par**2).sum()
+			loss = criterion(outputs, labels.to(device)) + l2
 			loss.backward()
 			optimizer.step()
 
@@ -184,8 +187,8 @@ if __name__ == '__main__':
 	CNN = ConvNet().to(device)
 	
 	n_epoch = 10
-	loss_train, loss_valid, e_train, e_valid = train(CNN, full_data,
-		num_epoch=n_epoch)
+	loss_train, loss_valid, e_train, e_valid = train(
+		CNN, full_data, num_epoch=n_epoch)
 	
 	plt.figure()
 	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
