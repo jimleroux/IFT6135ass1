@@ -65,4 +65,4 @@ class ConvNet(nn.Module):
 		output = output.view(-1 ,512 * 4 * 4)
 		for dense in self.denses:
 			output = dense(output)
-		return output 
+		return output
