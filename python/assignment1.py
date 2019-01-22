@@ -57,7 +57,7 @@ class ConvNet(nn.Module):
 			nn.Linear(512 * 4 * 4, 1024),
 			nn.ReLU(),
 			#nn.BatchNorm1d(1024),
-			#nn.Dropout2d(p=0.20),
+			nn.Dropout2d(p=0.20),
 			nn.Linear(1024, 2))
 			
 	def forward(self, x):
