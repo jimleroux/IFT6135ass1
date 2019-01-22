@@ -168,11 +168,15 @@ def train(cnn, full_data, num_epoch=20, lr=0.1):
 def l2(cnn):
 	loss = 0
 	for conv in cnn.convlayers:
-		if conv.weight is not None:
+		try:
 			loss += torch.sum(conv.weight**2)
+		except:
+			continue
 	for dense in cnn.denses:
-		if dense.weight is not None:
+		try:
 			loss += torhc.sum(dense.weight**2)
+		except:
+			continue
 	return loss
 
 if __name__ == '__main__':
