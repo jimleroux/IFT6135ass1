@@ -56,7 +56,10 @@ def train(model, full_data, num_epoch=20, lr=0.1):
 		err_train: total error on the training set after each epoch.
 		err_valid: total error on the test set after each epoch.
 		"""
-		split = [int(0.8*len(full_data)), len(full_data)-int(0.8*len(full_data))]
+		split = [
+			int(0.8*len(full_data)),
+			len(full_data)-int(0.8*len(full_data))
+			]
 		train, valid = torch.utils.data.dataset.random_split(full_data, split)
 		trainloader = torch.utils.data.DataLoader(
 			train, batch_size=64, shuffle=True)
@@ -137,9 +140,10 @@ if __name__ == '__main__':
 	
 	# Create, load and split the datas.
 	cat_dog_data = dataset(transforms=transform)
-	mnist_data = torchvision.datasets.MNIST(
+	mnist_train = torchvision.datasets.MNIST(
 		root='./data', train=True, download=True, transform=transform)	
-	
+	mnist_test = torchvision.datasets.MNIST(
+		root='./data', train=False, download=True, transform=transform)	
 	# Create the models
 	CNN = cnn.ConvNet().to(device)
 	
