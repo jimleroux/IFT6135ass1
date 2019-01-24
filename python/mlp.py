@@ -159,6 +159,7 @@ class NN(object):
 				if total>5000:
 					break
 			acc_train.append(correct/total)
+			print(correct/total)
 
 			correct = 0.
 			total = 0.
