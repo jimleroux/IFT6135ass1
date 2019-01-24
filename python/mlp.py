@@ -154,8 +154,10 @@ class NN(object):
 				inputs = self.transform_input(inputs)				
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
-				correct += np.sum(pred==np.argmax(Y, axis=0))
+				correct += np.sum(cache["a3"]==np.argmax(labels, axis=0))
 				total += labels.shape[1]
+				if total>5000:
+					break
 			acc_train.append(correct/total)
 
 			correct = 0.
@@ -165,8 +167,10 @@ class NN(object):
 				inputs = self.transform_input(inputs)				
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
-				correct += np.sum(pred==np.argmax(Y, axis=0))
+				correct += np.sum(cache["a3"]==np.argmax(labels, axis=0))
 				total += labels.shape[1]
+				if total>5000:
+					break
 			acc_test.append(correct/total)
 			print("Accuracy train: {0:.2f}, Accuracy valid: {0:.2f}".format(
 				acc_train[epoch]*100, acc_test[epoch])*100)
