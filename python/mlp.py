@@ -18,7 +18,10 @@ import torch.optim as optim
 import time
 import csv
 import os
-import cupy as np
+if torch.cuda.is_available():
+	import cupy as np
+else:
+	import numpy as np
 
 class NN(object):
 	
@@ -177,4 +180,4 @@ class NN(object):
 		return onehot
 
 	def transform_input(self, X):
-		return X.reshape((X.shape[0],self.layers[0])).numpy().T
+		return np.array(X.reshape((X.shape[0],self.layers[0])).numpy().T)
