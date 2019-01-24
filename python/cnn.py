@@ -105,7 +105,7 @@ class ConvNet(nn.Module):
 			for epoch in range(num_epoch):
 				self.train()
 				lrd = lr / (1 + 9*epoch/num_epoch)
-				optimizer = optim.SGD(model.parameters(), lr=lr)		
+				optimizer = optim.SGD(self.parameters(), lr=lr)		
 				for datas in trainloader:
 					inputs, labels = datas
 					optimizer.zero_grad()
@@ -135,7 +135,7 @@ class ConvNet(nn.Module):
 				with torch.no_grad():
 					for datas in validloader:
 						inputs, labels = datas
-						outputs = model(inputs.to(device))
+						outputs = self(inputs.to(device))
 						_, predicted = torch.max(outputs.data, 1)
 						total += labels.size(0)
 						correct += (predicted == labels.to(device)).sum().item()
