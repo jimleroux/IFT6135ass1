@@ -71,7 +71,7 @@ if __name__ == '__main__':
 	MLP = mlp.NN()
 	#atrain, atest = MLP.train(trainloader,testloader)
 	n_epoch = 70
-	loss_train, loss_valid, e_train, e_valid = CNN.train(
+	loss_train, loss_valid, e_train, e_valid = CNN.train_(
 		cat_dog_data, num_epoch=n_epoch)
 	
 
