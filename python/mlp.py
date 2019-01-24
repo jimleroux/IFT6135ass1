@@ -154,6 +154,8 @@ class NN(object):
 				inputs = self.transform_input(inputs)				
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
+				print(labels.shape)
+				print(cache["a3"].shape)
 				correct += np.sum(cache["a3"]==np.argmax(labels, axis=0))
 				total += labels.shape[1]
 				if total>5000:
