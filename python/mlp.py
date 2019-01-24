@@ -12,13 +12,16 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import time
 import csv
 import os
+if torch.cuda.is_available():
+	import cupy as np
+else:
+	import numpy as np
 
 class NN(object):
 	
