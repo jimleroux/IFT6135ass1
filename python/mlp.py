@@ -35,8 +35,6 @@ class NN(object):
 		self.layers = [28*28, 512, 512, 10]
 		self.initialize_weights(n_hidden, 0)
 
-
-
 	def initialize_weights(self, n_hidden, dims):
 		num_layer = len(self.layers)
 		for i in range(1, num_layer):
