@@ -67,7 +67,7 @@ class ConvNet(nn.Module):
 			output = dense(output)
 		return output
 
-	def train_(self, full_data, num_epoch=20, lr=0.1, device):
+	def train_(self, full_data, device, num_epoch=20, lr=0.1):
 			"""
 			Train function for the network.
 
