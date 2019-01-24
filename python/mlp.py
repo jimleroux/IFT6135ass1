@@ -158,8 +158,8 @@ class NN(object):
 				total += labels.shape[1]
 				if total>5000:
 					break
-			acc_train.append(correct/total)
-			
+			acc_train.append(float(correct/total))
+
 			correct = 0.
 			total = 0.
 			for data in testloader:
@@ -171,7 +171,7 @@ class NN(object):
 				total += labels.shape[1]
 				if total>5000:
 					break
-			acc_test.append(correct/total)
+			acc_test.append(float(correct/total))
 			print("Accuracy train: {0:.2f}, Accuracy valid: {1:.2f}".format(
 				acc_train[epoch]*100, acc_test[epoch])*100)
 		return acc_train, acc_test
