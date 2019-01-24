@@ -13,7 +13,6 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -21,6 +20,11 @@ import time
 import csv
 import os
 import cnn
+import mlp
+if torch.cuda.is_available():
+	import cupy as np
+else:
+	import numpy as np
 
 CURRENT_DIR = os.getcwd()
 
@@ -133,28 +137,35 @@ if __name__ == '__main__':
 	plt.rc('axes', labelsize=15)
 	
 	# Define the transformations.
-	transform = transforms.Compose(
-		[transforms.RandomHorizontalFlip(),
+	transform = transforms.Compose([
+		transforms.RandomHorizontalFlip(),
 		transforms.RandomVerticalFlip(),transforms.ToTensor(),
-		transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+		transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+		])
 	
 	# Create, load and split the datas.
 	cat_dog_data = dataset(transforms=transform)
 	mnist_train = torchvision.datasets.MNIST(
-		root='./data', train=True, download=True, transform=transform)	
+		root='./data', train=True, download=True, transform=transform)
+	trainloader = torch.utils.data.DataLoader(
+		mnist_train,batch_size=256,shuffle=True)
 	mnist_test = torchvision.datasets.MNIST(
 		root='./data', train=False, download=True, transform=transform)	
+	testloader = torch.utils.data.DataLoader(
+		mnist_test,batch_size=256,shuffle=False)	
 	# Create the models
 	CNN = cnn.ConvNet().to(device)
-	
+	MLP = mlp.NN()
+	atrain, atest = MLP.train(trainloader,testloader)
 	n_epoch = 70
-	loss_train, loss_valid, e_train, e_valid = train(
-		CNN, cat_dog_data, num_epoch=n_epoch)
+	#loss_train, loss_valid, e_train, e_valid = train(
+	#	CNN, cat_dog_data, num_epoch=n_epoch)
 	
-	plt.figure()
-	plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
-	plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')
-	plt.xlabel('Epoch')
-	plt.ylabel('Error')
-	plt.legend(fontsize=25)
-	plt.show()
+
+	#plt.figure()
+	#plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
+	#plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')
+	#plt.xlabel('Epoch')
+	#plt.ylabel('Error')
+	#plt.legend(fontsize=25)
+	#plt.show()

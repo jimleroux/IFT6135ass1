@@ -20,18 +20,20 @@ import time
 import csv
 import os
 
-
-
 class NN(object):
-    
-    def __init__(
-    		self, hidden_dims=(1024,2048), n_hidden=2, mode='train',
-    		datapath=None, model_path=None):
-    	self.lams = [0.0001, 0.0001, 0.0001, 0.0001]
-    	self.n_hidden = n_hidden
-    	self.hidden_dims = hidden_dims
-    	self.parameters = {}
-    	self.layers = [28*28, 512, 512, 10]
+	
+	def __init__(
+			self, hidden_dims=(1024,2048), n_hidden=2, mode='train',
+			datapath=None, model_path=None):
+		
+		self.lams = [0.0001, 0.0001, 0.0001, 0.0001]
+		self.n_hidden = n_hidden
+		self.hidden_dims = hidden_dims
+		self.parameters = {}
+		self.layers = [28*28, 512, 512, 10]
+		self.initialize_weights(n_hidden, 0)
+
+
 
 	def initialize_weights(self, n_hidden, dims):
 		num_layer = len(self.layers)
@@ -103,14 +105,14 @@ class NN(object):
 				+ self.lams[2]*np.sign(self.parameters["W3"])
 		db3 = np.mean(dh3, axis=1, keepdims=True)
 		
-		da2 = np.sum(dh2[:,None,:]*self.parameters["W2"][:,:,None], axis=0)
+		da2 = np.sum(dh3[:,None,:]*self.parameters["W3"][:,:,None], axis=0)
 		dh2 = da2*1.*(cache["a2"]>0)
 		dW2 = np.mean(dh2[:,None,:]*cache["a1"][None,:,], axis=2)\
 				+ 2*self.lams[1]*self.parameters["W2"]\
 				+ self.lams[0]*np.sign(self.parameters["W2"])
 		db2 = np.mean(dh2, axis=1, keepdims=True)
 
-		da1 = np.sum(dh1[:,None,:]*self.parameters["W1"][:,:,None], axis=0)
+		da1 = np.sum(dh2[:,None,:]*self.parameters["W2"][:,:,None], axis=0)
 		dh1 = da1*1.*(cache["a1"]>0)
 		dW1 = np.mean(dh1[:,None,:]*cache["X"][None,:,], axis=2)\
 				+ 2*self.lams[1]*self.parameters["W1"]\
@@ -126,17 +128,53 @@ class NN(object):
 
 	def update(self, grads, lr):
 		for par in self.parameters.keys():
-			self.parameters[par] -= lr * grads[str(d)+par]  
+			self.parameters[par] -= lr * grads["d"+par]  
 
-	def train(self, trainloader, testloader, num_epoch, lr=0.01):
+	def train(self, trainloader, testloader, num_epoch=10, lr=0.01):
 		acc_train = []
 		acc_test = []
 		for epoch in range(num_epoch):
+			print("Epoch:{}".format(epoch))
 			for data in trainloader:
 				inputs, labels = data
+				inputs = self.transform_input(inputs)
+				labels = self.onehot(labels)
+				cache = self.forward(inputs)
+				grads = self.backward(cache, labels)
+				self.update(grads, lr)
+
+			# Calculate the accuracy
+			correct = 0.
+			total = 0.
+			for data in trainloader:
+				inputs, labels = data
+				inputs = transform_input(inputs)				
+				labels = self.onehot(labels)
+				cache = self.forward(inputs)
+				correct += np.sum(pred==np.argmax(Y, axis=0))
+				total += labels.shape[1]
+			acc_train.append(correct/total)
+
+			correct = 0.
+			total = 0.
+			for data in testloader:
+				inputs, labels = data
+				inputs = transform_input(inputs)				
+				labels = self.onehot(labels)
+				cache = self.forward(inputs)
+				correct += np.sum(pred==np.argmax(Y, axis=0))
+				total += labels.shape[1]
+			acc_test.append(correct/total)
+		return acc_train, acc_test
 
 	def test(self):
 		pass
 
 	def onehot(self, Y):
-		
+		onehot = np.zeros((self.layers[-1],len(Y)))
+		for j in range(len(Y)):
+			onehot[int(Y[j]),j] = 1.
+		return onehot
+
+	def transform_input(self, X):
+		return X.reshape((X.shape[0],self.layers[0])).numpy().T
