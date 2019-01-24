@@ -72,7 +72,7 @@ if __name__ == '__main__':
 	#atrain, atest = MLP.train(trainloader,testloader)
 	n_epoch = 70
 	loss_train, loss_valid, e_train, e_valid = CNN.train_(
-		cat_dog_data, num_epoch=n_epoch, device)
+		cat_dog_data, device, num_epoch=n_epoch)
 	
 
 	#plt.figure()
