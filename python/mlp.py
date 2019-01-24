@@ -151,7 +151,7 @@ class NN(object):
 			total = 0.
 			for data in trainloader:
 				inputs, labels = data
-				inputs = transform_input(inputs)				
+				inputs = self.transform_input(inputs)				
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
 				correct += np.sum(pred==np.argmax(Y, axis=0))
@@ -162,7 +162,7 @@ class NN(object):
 			total = 0.
 			for data in testloader:
 				inputs, labels = data
-				inputs = transform_input(inputs)				
+				inputs = self.transform_input(inputs)				
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
 				correct += np.sum(pred==np.argmax(Y, axis=0))
