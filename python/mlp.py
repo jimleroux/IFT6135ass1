@@ -29,7 +29,6 @@ class NN(object):
 			self, hidden_dims=(1024,2048), n_hidden=2, mode='train',
 			datapath=None, model_path=None):
 		
-		self.lams = [0.0001, 0.0001, 0.0001, 0.0001]
 		self.n_hidden = n_hidden
 		self.hidden_dims = hidden_dims
 		self.parameters = {}
@@ -71,12 +70,14 @@ class NN(object):
 	def activation(self, X):
 		return np.maximum(0, X)
 
-	def loss(self, Y, cache):
+	def loss(self, Y, cache, lam):
 		loss = np.sum(-np.log(cache["a3"])*Y)
-		loss += self.lams[0]*np.sum(np.abs(self.parameters["W1"]))\
-				+ self.lams[2]*np.sum(np.abs(self.parameters["W2"]))\
-				+ self.lams[1]*np.sum(self.parameters["W1"]**2)\
-				+ self.lams[3]*np.sum(self.parameters["W2"]**2)
+		loss += lam*np.sum(np.abs(self.parameters["W1"]))\
+				+ lam*np.sum(np.abs(self.parameters["W2"]))\
+				+ lam*np.sum(np.abs(self.parameters["W3"]))\
+				+ lam*np.sum(self.parameters["W1"]**2)\
+				+ lam*np.sum(self.parameters["W2"]**2)\
+				+ lam*np.sum(self.parameters["W3"]**2)
 		loss *= X.shape[1]
 		return loss
 
@@ -85,7 +86,7 @@ class NN(object):
 		out = np.exp(X-max_) / np.sum(np.exp(X-max_), axis=0)
 		return out
 
-	def backward(self, cache, Y):
+	def backward(self, cache, Y, lam):
 		"""
 		Method performing the backpropagation for the model.
 		
@@ -104,22 +105,22 @@ class NN(object):
 
 		dh3 = cache["a3"] - Y
 		dW3 = np.mean(dh3[:,None,:]*cache["a2"][None,:,:], axis=2)\
-				+ 2*self.lams[3]*self.parameters["W3"]\
-				+ self.lams[2]*np.sign(self.parameters["W3"])
+				+ 2*lam*self.parameters["W3"]\
+				+ lam*np.sign(self.parameters["W3"])
 		db3 = np.mean(dh3, axis=1, keepdims=True)
 		
 		da2 = np.sum(dh3[:,None,:]*self.parameters["W3"][:,:,None], axis=0)
 		dh2 = da2*1.*(cache["a2"]>0)
 		dW2 = np.mean(dh2[:,None,:]*cache["a1"][None,:,], axis=2)\
-				+ 2*self.lams[1]*self.parameters["W2"]\
-				+ self.lams[0]*np.sign(self.parameters["W2"])
+				+ 2*lam*self.parameters["W2"]\
+				+ lam*np.sign(self.parameters["W2"])
 		db2 = np.mean(dh2, axis=1, keepdims=True)
 
 		da1 = np.sum(dh2[:,None,:]*self.parameters["W2"][:,:,None], axis=0)
 		dh1 = da1*1.*(cache["a1"]>0)
 		dW1 = np.mean(dh1[:,None,:]*cache["X"][None,:,], axis=2)\
-				+ 2*self.lams[1]*self.parameters["W1"]\
-				+ self.lams[0]*np.sign(self.parameters["W1"])
+				+ 2*lam*self.parameters["W1"]\
+				+ lam*np.sign(self.parameters["W1"])
 		db1 = np.mean(dh1, axis=1, keepdims=True)
 		
 		dx = np.sum(dh1[:,None,:]*self.parameters["W1"][:,:,None], axis=0)
@@ -133,7 +134,7 @@ class NN(object):
 		for par in self.parameters.keys():
 			self.parameters[par] -= lr * grads["d"+par]  
 
-	def train(self, trainloader, testloader, num_epoch=10, lr=0.01):
+	def train(self, trainloader, testloader, num_epoch=10, lr=0.01, lam=0.0001):
 		acc_train = []
 		acc_test = []
 		for epoch in range(num_epoch):
@@ -143,7 +144,7 @@ class NN(object):
 				inputs = self.transform_input(inputs)
 				labels = self.onehot(labels)
 				cache = self.forward(inputs)
-				grads = self.backward(cache, labels)
+				grads = self.backward(cache, labels, lam)
 				self.update(grads, lr)
 
 			# Calculate the accuracy
