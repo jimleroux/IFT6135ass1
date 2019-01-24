@@ -118,7 +118,7 @@ class ConvNet(nn.Module):
 				running_loss_valid = 0.0
 				correct = 0.
 				total = 0.
-				model.eval()
+				self.eval()
 				with torch.no_grad():
 					for datas in trainloader:
 						inputs, labels = datas
