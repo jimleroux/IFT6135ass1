@@ -159,8 +159,7 @@ class NN(object):
 				if total>5000:
 					break
 			acc_train.append(correct/total)
-			print(correct/total)
-
+			
 			correct = 0.
 			total = 0.
 			for data in testloader:
@@ -173,7 +172,7 @@ class NN(object):
 				if total>5000:
 					break
 			acc_test.append(correct/total)
-			print("Accuracy train: {0:.2f}, Accuracy valid: {0:.2f}".format(
+			print("Accuracy train: {0:.2f}, Accuracy valid: {1:.2f}".format(
 				acc_train[epoch]*100, acc_test[epoch])*100)
 		return acc_train, acc_test
 
