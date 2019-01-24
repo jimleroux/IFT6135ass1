@@ -9,6 +9,7 @@ __version__ = "1.0"
 __maintainer__ = "Jimmy Leroux"
 __studentid__ = "1024610"
 
+import argparse
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -42,6 +43,11 @@ class dataset(torch.utils.data.dataset.Dataset):
 		return len(self.data)
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"-m", "--model", help="Choose mlp or cnn, default is both", type=str)
+	args = parser.parse_args()
+
 	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	torch.cuda.manual_seed(10)
 	plt.style.use('ggplot')
@@ -69,12 +75,16 @@ if __name__ == '__main__':
 	# Create the models
 	CNN = cnn.ConvNet().to(device)
 	MLP = mlp.NN()
-	#atrain, atest = MLP.train(trainloader,testloader)
-	n_epoch = 70
-	loss_train, loss_valid, e_train, e_valid = CNN.train_(
-		cat_dog_data, device, num_epoch=n_epoch)
 	
-
+	if args.model is None:
+		acc_train, acc_test = MLP.train(trainloader,testloader)
+		loss_train, loss_valid, e_train, e_valid = CNN.train_(
+			cat_dog_data, device)
+	elif args.model == "mlp":
+		acc_train, acc_test = MLP.train(trainloader,testloader)
+	elif args.model == "cnn":
+		loss_train, loss_valid, e_train, e_valid = CNN.train_(
+			cat_dog_data, device)
 	#plt.figure()
 	#plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
 	#plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')
