@@ -69,7 +69,7 @@ if __name__ == '__main__':
 	# Create the models
 	CNN = cnn.ConvNet().to(device)
 	MLP = mlp.NN()
-	atrain, atest = MLP.train(trainloader,testloader)
+	#atrain, atest = MLP.train(trainloader,testloader)
 	n_epoch = 70
 	loss_train, loss_valid, e_train, e_valid = CNN.train(
 		cat_dog_data, num_epoch=n_epoch)
