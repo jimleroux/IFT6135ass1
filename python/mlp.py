@@ -25,7 +25,7 @@ class NN(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(n_hidden, "normal" )
+        self.initialize_weights(n_hidden, mode="normal" )
 
     def initialize_weights(self, n_hidden, mode="glorot"):
         num_layer = len(self.layers)
@@ -138,6 +138,7 @@ class NN(object):
     def update(self, grads, lr):
         for par in self.parameters.keys():
             self.parameters[par] -= lr * grads["d"+par]
+            print(lr*grad["d"+par])
 
     def train(self, trainloader, testloader,
               num_epoch=10, lr=0.0001, lam=0.0001):
