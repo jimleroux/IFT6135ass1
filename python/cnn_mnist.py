@@ -91,7 +91,6 @@ class ConvNet(nn.Module):
                     optimizer.step()
 
                 running_loss_train = 0.0
-                running_loss_valid = 0.0
                 correct = 0.
                 total = 0.
                 self.eval()
@@ -104,9 +103,13 @@ class ConvNet(nn.Module):
                         correct += (predicted == labels.to(device)).sum(
                             ).item()
                         loss = criterion(outputs, labels.to(device))
-                        running_loss_train += loss.item() / len(train)
+                        running_loss_train += loss.item()
+                        if total > 5000:
+                            break
                 err_train.append(1 - correct / total)
+                loss_train.append(running_loss_train / total)
 
+                running_loss_valid = 0.0                
                 correct = 0.
                 total = 0.
                 with torch.no_grad():
@@ -118,11 +121,12 @@ class ConvNet(nn.Module):
                         correct += (predicted == labels.to(device)).sum(
                             ).item()
                         loss = criterion(outputs, labels.to(device))
-                        running_loss_valid += loss.item() / len(valid)
+                        running_loss_valid += loss.item()
+                        if total > 5000:
+                            break                        
                 err_valid.append(1 - correct / total)
+                loss_train.append(running_loss_valid / total)
 
-                loss_train.append(running_loss_train)
-                loss_valid.append(running_loss_valid)
                 print('Epoch: {}'.format(epoch))
                 print('Train loss: {0:.4f} Train error: {1:.2f}'.format(
                     loss_train[epoch], err_train[epoch]))
