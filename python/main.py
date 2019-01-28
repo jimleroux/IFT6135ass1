@@ -15,7 +15,8 @@ import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import os
-import cnn
+import cnn_catsdogs as cnncd
+import cnn_mnist as cnnmnist
 import mlp
 if torch.cuda.is_available():
     import cupy as np
@@ -43,7 +44,8 @@ class dataset(torch.utils.data.dataset.Dataset):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-m", "--model", help="Choose mlp or cnn, default is both", type=str)
+        "-m", "--model", help="Choose mlp cnndc or cnnmnist, default is both",
+        type=str)
     args = parser.parse_args()
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -72,20 +74,24 @@ if __name__ == '__main__':
         mnist_test, batch_size=256, shuffle=False)
     # Create the models
 
-    CNN = cnn.ConvNet().to(device)
+    CNNDC = cnncd.ConvNet().to(device)
     MLP = mlp.NN()
-
+    CNNMNIST = cnnmnist.ConvNet().to(device)
     if args.model is None:
         acc_train, acc_test = MLP.train(trainloader, testloader)
-        loss_train, loss_valid, e_train, e_valid = CNN.train_(
-            cat_dog_data, device)
+        out_dc = CNNDC.train_(cat_dog_data, device)
+        out_mnist = CNNMNIST.train_(trainloader, testloader, device)
+
     elif args.model == "mlp":
         print("MLP training:\n")
         acc_train, acc_test = MLP.train(trainloader, testloader)
-    elif args.model == "cnn":
+    elif args.model == "cnndc":
         print("CNN training:\n")
-        loss_train, loss_valid, e_train, e_valid = CNN.train_(
-            cat_dog_data, device)
+        out_dc = CNNDC.train_(cat_dog_data, device)
+    elif args.model == "cnnmnist":
+        print("CNN training:\n")
+        out_mnist = CNNMNIST.train_(trainloader, validloader, device)
+
     # plt.figure()
     # plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
     # plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')
