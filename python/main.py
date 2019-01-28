@@ -90,7 +90,7 @@ if __name__ == '__main__':
         out_dc = CNNDC.train_(cat_dog_data, device)
     elif args.model == "cnnmnist":
         print("CNN training:\n")
-        out_mnist = CNNMNIST.train_(trainloader, validloader, device)
+        out_mnist = CNNMNIST.train_(trainloader, testloader, device)
 
     # plt.figure()
     # plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
