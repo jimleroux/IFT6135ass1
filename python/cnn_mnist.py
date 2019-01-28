@@ -125,7 +125,7 @@ class ConvNet(nn.Module):
                         if total > 5000:
                             break                        
                 err_valid.append(1 - correct / total)
-                loss_train.append(running_loss_valid / total)
+                loss_valid.append(running_loss_valid / total)
 
                 print('Epoch: {}'.format(epoch))
                 print('Train loss: {0:.4f} Train error: {1:.2f}'.format(
