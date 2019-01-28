@@ -138,7 +138,7 @@ class NN(object):
     def update(self, grads, lr):
         for par in self.parameters.keys():
             self.parameters[par] -= lr * grads["d"+par]
-            print(lr*grad["d"+par])
+            print(lr*grads["d"+par])
 
     def train(self, trainloader, testloader,
               num_epoch=10, lr=0.0001, lam=0.0001):
