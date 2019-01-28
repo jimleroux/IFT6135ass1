@@ -80,8 +80,10 @@ if __name__ == '__main__':
         loss_train, loss_valid, e_train, e_valid = CNN.train_(
             cat_dog_data, device)
     elif args.model == "mlp":
+        print("MLP training:\n")
         acc_train, acc_test = MLP.train(trainloader, testloader)
     elif args.model == "cnn":
+        print("CNN training:\n")
         loss_train, loss_valid, e_train, e_valid = CNN.train_(
             cat_dog_data, device)
     # plt.figure()
