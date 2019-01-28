@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     CNN = cnn.ConvNet().to(device)
     MLP = mlp.NN()
-    print(args.model)
+
     if args.model is None:
         acc_train, acc_test = MLP.train(trainloader, testloader)
         loss_train, loss_valid, e_train, e_valid = CNN.train_(
