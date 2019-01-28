@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Kaggle competition for assignement 1 of IFT6135.
+Implementation of a CNN for for dogs and cats dataset.
 """
 
 __authors__ = "Jimmy Leroux"
