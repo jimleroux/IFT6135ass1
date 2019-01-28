@@ -141,7 +141,7 @@ class NN(object):
             print(lr*grads["d"+par])
 
     def train(self, trainloader, testloader,
-              num_epoch=10, lr=0.0001, lam=0.0001):
+              num_epoch=10, lr=0.01, lam=0.0000):
         acc_train = []
         acc_test = []
         for epoch in range(num_epoch):
