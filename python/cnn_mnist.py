@@ -44,7 +44,7 @@ class ConvNet(nn.Module):
         output = x
         for conv in self.convlayers:
             output = conv(output)
-        output = output.view(-1, 256 * 2 * 2)
+        output = output.view(-1, 512 * 2 * 2)
         for dense in self.denses:
             output = dense(output)
         return output
