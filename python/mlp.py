@@ -25,9 +25,9 @@ class NN(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(n_hidden, 0)
+        self.initialize_weights(n_hidden, "normal" )
 
-    def initialize_weights(self, n_hidden, dims, mode="glorot"):
+    def initialize_weights(self, n_hidden, mode="glorot"):
         num_layer = len(self.layers)
         if mode == "zero":
             for i in range(1, num_layer):
