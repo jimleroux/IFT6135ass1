@@ -39,7 +39,7 @@ class NN(object):
                 self.parameters["W"+str(i)] = np.random.rand(
                     self.layers[i], self.layers[i-1])
                 self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
-        if mode == "glorot"
+        if mode == "glorot":
             for i in range(1, num_layer):
                 dl = 1. / np.sqrt(6./(self.layers[i-1]+self.layers[i]))
                 self.parameters["W"+str(i)] = np.ones(
