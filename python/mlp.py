@@ -25,7 +25,7 @@ class NN(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(n_hidden)
+        self.initialize_weights()
 
     def initialize_weights(self):
         """
