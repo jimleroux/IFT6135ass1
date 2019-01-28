@@ -25,27 +25,20 @@ class NN(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(n_hidden, mode="normal" )
+        self.initialize_weights(n_hidden)
 
-    def initialize_weights(self, n_hidden, mode="glorot"):
+    def initialize_parameters(self):
+        """
+        Initialization of the model's parameters
+        """
+
         num_layer = len(self.layers)
-        if mode == "zero":
-            for i in range(1, num_layer):
-                self.parameters["W"+str(i)] = np.zeros(
-                    (self.layers[i], self.layers[i-1]))
-                self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
-        if mode == "normal":
-            for i in range(1, num_layer):
-                self.parameters["W"+str(i)] = np.random.rand(
-                    self.layers[i], self.layers[i-1])
-                self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
-        if mode == "glorot":
-            for i in range(1, num_layer):
-                dl = 1. / np.sqrt(6./(self.layers[i-1]+self.layers[i]))
-                self.parameters["W"+str(i)] = np.ones(
-                    (self.layers[i], self.layers[i-1])) * np.random.uniform(
-                    -dl, dl, (self.layers[i], self.layers[i-1]))
-                self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
+        for i in range(1, num_layer):
+            n_c = 1./np.sqrt(self.layers[i])
+            self.parameters["W" + str(i)] = np.ones((self.layers[i],
+                self.layers[i-1])) * np.random.uniform(-n_c, n_c,
+                    (self.layers[i],self.layers[i-1]))
+            self.parameters["b" + str(i)] = np.zeros((self.layers[i],1))
 
     def forward(self, X):
         """
