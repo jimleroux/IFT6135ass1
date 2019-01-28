@@ -25,7 +25,7 @@ class ConvNet(nn.Module):
             nn.Conv2d(64, 128, 3, padding=0),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 128, 3, padding=0),
+            nn.Conv2d(128, 128, 3, padding=0),
             nn.ReLU(),
             nn.Conv2d(128, 256, 3, padding=0),
             nn.ReLU(),
