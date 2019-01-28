@@ -27,7 +27,7 @@ class NN(object):
         self.layers = [28*28, 512, 512, 10]
         self.initialize_weights(n_hidden)
 
-    def initialize_parameters(self):
+    def initialize_weights(self):
         """
         Initialization of the model's parameters
         """
