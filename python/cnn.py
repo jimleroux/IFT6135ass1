@@ -109,7 +109,7 @@ class ConvNet(nn.Module):
             return output
 
     def train_(
-            self, train, valid, device,num_epoch=10,
+            self, train, valid, device, num_epoch=10,
             lr=0.1, batchsize=256):
         """
         Train function for the network.

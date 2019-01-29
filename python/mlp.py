@@ -34,7 +34,7 @@ class NN(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(mode="glorot" )
+        self.initialize_weights(mode="glorot")
 
     def initialize_weights(self, mode="glorot"):
         """
@@ -88,7 +88,7 @@ class NN(object):
         cache = {
                 "h1": h1, "a1": a1, "h2": h2, "a2": a2,
                 "h3": h3, "a3": a3, "X": X
-                }
+            }
         return cache
 
     def activation(self, X):
@@ -162,7 +162,7 @@ class NN(object):
         -----------
         cache (dict): Stored intermediate cache of the forward
                         propagation pass.
-        
+
         Y (array): Targets of the probagated exemple.
                     Shape: (num_class, num_exemple)
         lam (float): Regularization constant.
@@ -218,13 +218,32 @@ class NN(object):
 
     def train(
             self, train, test, num_epoch=10,
-            lr=0.1,lam=0.0000, batchsize=256):
+            lr=0.1, lam=0.0000, batchsize=256):
+        """
+        Training method.
+
+        Parameters:
+        -----------
+        train (torch dataset): Torch dataset of the training data.
+        test (torch dataset): Torch dataset of the test data.
+        num_epoch (int): Number of epoch in the training phase.
+        lr (float): Learning rate.
+        lam (float): Regularisation constant.
+        batchsize (int): Number of example in a minibatch.
+
+        Returns:
+        --------
+        acc_train (list): List containing the accuracy of the network
+                            at each epoch.
+        acc_test (list): List containing the accuracy of the network
+                            at each epoch.
+        """
 
         trainloader = torch.utils.data.DataLoader(
             train, batch_size=batchsize, shuffle=True)
         testloader = torch.utils.data.DataLoader(
             test, batch_size=batchsize, shuffle=False)
-        
+
         acc_train = []
         acc_test = []
         for epoch in range(num_epoch):
@@ -273,10 +292,39 @@ class NN(object):
         pass
 
     def onehot(self, Y):
+        """
+        Usefull function to map labels to onehot vectors.
+
+        Parameters:
+        -----------
+        Y (array): Array containing the labels to put in onehot form.
+                    Shape: (1, num_exemple)
+
+        Returns:
+        --------
+        onehot (array): Onehot encoding of all the labels Y.
+                        Shape: (num_classes, num_exemple)
+        """
+
         onehot = np.zeros((self.layers[-1], len(Y)))
         for j in range(len(Y)):
             onehot[int(Y[j]), j] = 1.
         return onehot
 
     def transform_input(self, X):
-        return np.array(X.reshape((X.shape[0], self.layers[0])).numpy().T)
+        """
+        Method to transform the data from torch tensor to numpy.
+
+        Parameters:
+        -----------
+        X (array): Array containing the data of shape: (num_exemple, dim)
+
+        Returns:
+        --------
+        transformed (array): Array containing the tranformed data.
+                                Shape: (dim, num_exemple)
+        """
+
+        transformed = np.array(
+            X.reshape((X.shape[0], self.layers[0])).numpy().T)
+        return transformed

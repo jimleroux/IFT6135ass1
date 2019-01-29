@@ -60,7 +60,7 @@ if __name__ == '__main__':
         type=str)
     args = parser.parse_args()
     # ------------------------------------------------------------------------
-    # Define the transformations we apply to the images, both the cat and 
+    # Define the transformations we apply to the images, both the cat and
     # dog dataset and mnist.
     # ------------------------------------------------------------------------
     transform = transforms.Compose([
