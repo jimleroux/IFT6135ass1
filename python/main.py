@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Kaggle competition for assignement 1 of IFT6135.
+HW1
 """
 
 __authors__ = "Jimmy Leroux"
@@ -25,7 +25,11 @@ else:
 CURRENT_DIR = os.getcwd()
 
 
-class dataset(torch.utils.data.dataset.Dataset):
+class Dataset(torch.utils.data.dataset.Dataset):
+    """
+    Class implementing a pytorch dataset. We need to define the __getitem__
+    and __len__.
+    """
 
     def __init__(self, transforms=None):
         os.chdir("../dataset/trainset/")
@@ -41,28 +45,33 @@ class dataset(torch.utils.data.dataset.Dataset):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-m", "--model", help="Choose mlp cnndc or cnnmnist, default is both",
-        type=str)
-    args = parser.parse_args()
-
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     torch.cuda.manual_seed(10)
     plt.style.use('ggplot')
     plt.rc('xtick', labelsize=15)
     plt.rc('ytick', labelsize=15)
     plt.rc('axes', labelsize=15)
-
-    # Define the transformations.
+    # ------------------------------------------------------------------------
+    # Create an arguments parser so we dont train every model everytime.
+    # ------------------------------------------------------------------------
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-m", "--model", help="Choose mlp cnndc or cnnmnist, default is both",
+        type=str)
+    args = parser.parse_args()
+    # ------------------------------------------------------------------------
+    # Define the transformations we apply to the images, both the cat and 
+    # dog dataset and mnist.
+    # ------------------------------------------------------------------------
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(), transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
-
+    # ------------------------------------------------------------------------
     # Create, load and split the datas.
-    cat_dog_data = dataset(transforms=transform)
+    # ------------------------------------------------------------------------
+    cat_dog_data = Dataset(transforms=transform)
     split = [
         int(0.8*len(cat_dog_data)),
         len(cat_dog_data)-int(0.8*len(cat_dog_data))
@@ -74,17 +83,19 @@ if __name__ == '__main__':
         root='./data', train=True, download=True, transform=transform)
     mnist_test = torchvision.datasets.MNIST(
         root='./data', train=False, download=True, transform=transform)
-    
+    # ------------------------------------------------------------------------
     # Create the models
+    # ------------------------------------------------------------------------
     cnn_cd = ConvNet("cat_and_dogs").to(device)
-    neural_network = NN()
     cnn_mnist = ConvNet("mnist").to(device)
-
+    neural_network = NN()
+    # ------------------------------------------------------------------------
+    # Train the chosen model/s.
+    # ------------------------------------------------------------------------
     if args.model is None:
         acc_train, acc_test = neural_network.train(mnist_train, mnist_test)
         out_dc = cnn_cd.train_(cd_train, cd_valid, device, num_epoch=70)
         out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
-
     elif args.model == "mlp":
         print("MLP training:\n")
         acc_train, acc_test = neural_network.train(mnist_train, mnist_test)
@@ -94,7 +105,7 @@ if __name__ == '__main__':
     elif args.model == "cnnmnist":
         print("CNN training:\n")
         out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
-
+    # ------------------------------------------------------------------------
     # plt.figure()
     # plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
     # plt.plot(range(1, n_epoch+1),e_valid, 'sr-', label='Valid')

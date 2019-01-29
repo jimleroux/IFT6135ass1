@@ -16,18 +16,36 @@ else:
 
 
 class NN(object):
+    """
+    Implementation of a custom mlp.
+    """
 
     def __init__(
-            self, hidden_dims=(1024, 2048), n_hidden=2, mode='train',
-            datapath=None, model_path=None):
+            self, hidden_dims=(1024, 2048), n_hidden=2,
+            mode='train', datapath=None, model_path=None):
+        """
+        Parameters:
+        -----------
+        hidden_dims (tuple): Dimension of the hidden layers.
+        n_hidden (int): Number of hidden layers.
+        """
 
         self.n_hidden = n_hidden
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(n_hidden, mode="glorot" )
+        self.initialize_weights(mode="glorot" )
 
-    def initialize_weights(self, n_hidden, mode="glorot"):
+    def initialize_weights(self, mode="glorot"):
+        """
+        Weights initialization method. Used at the begining of the training
+        step
+
+        Parameters:
+        -----------
+        mode (str): Initilization method.
+        """
+
         num_layer = len(self.layers)
         if mode == "zero":
             for i in range(1, num_layer):
@@ -49,14 +67,15 @@ class NN(object):
 
     def forward(self, X):
         """
-        Forward propagation method. It propagated X through the network.
+        Forward propagation method.
 
         Parameters:
         -----------
-        X: Input matrix we wish to propagate. Shape: (dim, num_exemple)
+        X (array): Input array we wish to propagate. Shape: (dim, num_exemple)
 
         Returns:
-        cache: Dictionary of the intermediate cache at each step
+        --------
+        cache (dict): Dictionary of the intermediate cache at each step
                 of the propagation.
         """
 
@@ -73,9 +92,38 @@ class NN(object):
         return cache
 
     def activation(self, X):
-        return np.maximum(0, X)
+        """
+        Activation function, here its ReLU.
+
+        Parameters:
+        -----------
+        X (array): Array contraining data. Shape: (dim, num_exemple)
+
+        Returns:
+        --------
+        out (array): Array of the activated data.
+        """
+
+        out = np.maximum(0, X)
+        return out
 
     def loss(self, Y, cache, lam):
+        """
+        Calculate the loss on our model.
+
+        Parameters:
+        -----------
+        Y (array): Labels/target of the forwarded data.
+                    Shape: (dim, num_exemple)
+        cache (dict): Dictionary containing the intermediate values.
+        lam (float): Regularisation constant. To be more rigorous, we
+                        should add a lam for the L1 and L2 regularisation.
+
+        Returns:
+        --------
+        loss (float): Value of the total loss.
+        """
+
         loss = np.sum(-np.log(cache["a3"])*Y)
         loss += lam*np.sum(np.abs(self.parameters["W1"]))\
             + lam*np.sum(np.abs(self.parameters["W2"]))\
@@ -87,6 +135,21 @@ class NN(object):
         return loss
 
     def softmax(self, X):
+        """
+        Softmax activation. Used in the last layer of the NN for the
+        classification.
+
+        Parameters:
+        -----------
+        X (array): Array containing the data. Shape: (dim, num_exemple)
+
+        Returns:
+        --------
+        out (array): "probability" of each class for each data exemple.
+                        Shape: (dim, num_exemple).
+        """
+
+        # We use a little trick for stability purpose.
         max_ = X.max(axis=0)
         out = np.exp(X-max_) / np.sum(np.exp(X-max_), axis=0)
         return out
@@ -97,12 +160,16 @@ class NN(object):
 
         Parameters:
         -----------
-        cache: Stored intermediate cache of the forward propagation pass.
-        Y: Target cache (of the training set). Shape: (num_class, num_exemple)
+        cache (dict): Stored intermediate cache of the forward
+                        propagation pass.
+        
+        Y (array): Targets of the probagated exemple.
+                    Shape: (num_class, num_exemple)
+        lam (float): Regularization constant.
 
         Returns:
         --------
-        grads: Dictionary containing the gradients of the parameters.
+        grads (dict): Dictionary containing the gradients of the parameters.
 
         """
 
@@ -136,11 +203,22 @@ class NN(object):
         return grads
 
     def update(self, grads, lr):
+        """
+        Update method for the model.
+
+        Parameters:
+        -----------
+        grads (dict): Dictionary containing the gradients of each
+                        parameters.
+        lr (float): Learning rate for the gradient descent.
+        """
+
         for par in self.parameters.keys():
             self.parameters[par] -= lr*grads["d"+par]
 
-    def train(self, train, test, num_epoch=10,
-            lr=0.1, lam=0.0000, batchsize=256):
+    def train(
+            self, train, test, num_epoch=10,
+            lr=0.1,lam=0.0000, batchsize=256):
 
         trainloader = torch.utils.data.DataLoader(
             train, batch_size=batchsize, shuffle=True)
