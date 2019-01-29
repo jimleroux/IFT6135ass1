@@ -76,7 +76,7 @@ if __name__ == '__main__':
         root='./data', train=False, download=True, transform=transform)
     
     # Create the models
-    cnn_cd = ConvNet("cat_and_dog").to(device)
+    cnn_cd = ConvNet("cat_and_dogs").to(device)
     neural_network = NN()
     cnn_mnist = ConvNet("mnist").to(device)
 
