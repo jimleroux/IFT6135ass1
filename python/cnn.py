@@ -20,7 +20,7 @@ class ConvNet(nn.Module):
         super(ConvNet, self).__init__()
         self.dataset = dataset
 
-        if self.dataset == "cat_and_dogs"
+        if self.dataset == "cat_and_dogs":
             self.convlayers = nn.Sequential(
                 nn.Conv2d(3, 64, 5, padding=0),
                 nn.ReLU(),
