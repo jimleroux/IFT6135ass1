@@ -145,7 +145,7 @@ class NN(object):
         trainloader = torch.utils.data.DataLoader(
             train, batch_size=batchsize, shuffle=True)
         testloader = torch.utils.data.DataLoader(
-            valid, batch_size=batchsize, shuffle=False)
+            test, batch_size=batchsize, shuffle=False)
         
         acc_train = []
         acc_test = []
