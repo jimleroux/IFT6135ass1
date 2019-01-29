@@ -87,7 +87,7 @@ class ConvNet(nn.Module):
             return output
 
     def train_(self, train, valid, device, num_epoch=10,
-                lr=0.1, batch_size=256):
+                lr=0.1, batchsize=256):
             """
             Train function for the network.
 
@@ -112,9 +112,9 @@ class ConvNet(nn.Module):
             """
 
             trainloader = torch.utils.data.DataLoader(
-                train, batch_size=batch_size, shuffle=True)
+                train, batch_size=batchsize, shuffle=True)
             validloader = torch.utils.data.DataLoader(
-                valid, batch_size=batch_size, shuffle=False)
+                valid, batch_size=batchsize, shuffle=False)
 
             criterion = nn.CrossEntropyLoss()
 
