@@ -16,43 +16,78 @@ import torch.optim as optim
 
 
 class ConvNet(nn.Module):
-    def __init__(self):
+    def __init__(self, dataset="mnist"):
         super(ConvNet, self).__init__()
+        self.dataset = dataset
 
-        self.convlayers = nn.Sequential(
-            nn.Conv2d(3, 64, 5, padding=0),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, 5, padding=0),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(64, 128, 5, padding=0),
-            nn.ReLU(),
-            nn.Conv2d(128, 128, 5, padding=0),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(128, 256, 3, padding=0),
-            nn.ReLU(),
-            nn.Conv2d(256, 256, 3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            nn.Conv2d(256, 512, 3, padding=1),
-            nn.ReLU())
-            # 60 56 28 24 20 10
-        self.denses = nn.Sequential(
-            nn.Linear(512 * 4 * 4, 1024),
-            nn.ReLU(),
-            nn.Linear(1024, 2))
+        if self.dataset == "cat_and_dogs"
+            self.convlayers = nn.Sequential(
+                nn.Conv2d(3, 64, 5, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(64, 64, 5, padding=0),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(64, 128, 5, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(128, 128, 5, padding=0),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(128, 256, 3, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(256, 256, 3, padding=1),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(256, 512, 3, padding=1),
+                nn.ReLU())
+                # 60 56 28 24 20 10
+            self.denses = nn.Sequential(
+                nn.Linear(512 * 4 * 4, 1024),
+                nn.ReLU(),
+                nn.Linear(1024, 2))
+
+        if self.dataset == "mnist":
+            self.convlayers = nn.Sequential(
+                nn.Conv2d(1, 64, 3, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(64, 128, 3, padding=0),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(128, 128, 3, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(128, 256, 3, padding=0),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(256, 256, 3, padding=0),
+                nn.ReLU())
+                # 26 24 12 10 8 4 2
+            self.denses = nn.Sequential(
+                nn.Linear(256 * 2 * 2, 512),
+                nn.ReLU(),
+                # nn.BatchNorm1d(1024),
+                # nn.Dropout2d(p=0.20),
+                nn.Linear(512, 10))
 
     def forward(self, x):
-        output = x
-        for conv in self.convlayers:
-            output = conv(output)
-        output = output.view(-1, 512 * 4 * 4)
-        for dense in self.denses:
-            output = dense(output)
-        return output
+        if self.dataset == "cat_and_dogs":
+            output = x
+            for conv in self.convlayers:
+                output = conv(output)
+            output = output.view(-1, 512 * 4 * 4)
+            for dense in self.denses:
+                output = dense(output)
+            return output
+        
+        if self.dataset == "mnist":
+            output = x
+            for conv in self.convlayers:
+                output = conv(output)
+            output = output.view(-1, 256 * 2 * 2)
+            for dense in self.denses:
+                output = dense(output)
+            return output
 
-    def train_(self, full_data, device, num_epoch=70, lr=0.1):
+    def train_(self, train, valid, device, num_epoch=10,
+                lr=0.1, batch_size=256):
             """
             Train function for the network.
 
@@ -75,16 +110,11 @@ class ConvNet(nn.Module):
             err_train: total error on the train set after each epoch.
             err_valid: total error on the test set after each epoch.
             """
-            split = [
-                int(0.8*len(full_data)),
-                len(full_data)-int(0.8*len(full_data))
-                ]
-            train, valid = torch.utils.data.dataset.random_split(
-                full_data, split)
+
             trainloader = torch.utils.data.DataLoader(
-                train, batch_size=64, shuffle=True)
+                train, batch_size=batch_size, shuffle=True)
             validloader = torch.utils.data.DataLoader(
-                valid, batch_size=64, shuffle=True)
+                valid, batch_size=batch_size, shuffle=False)
 
             criterion = nn.CrossEntropyLoss()
 

@@ -137,10 +137,15 @@ class NN(object):
 
     def update(self, grads, lr):
         for par in self.parameters.keys():
-            self.parameters[par] = self.parameters[par] - lr*grads["d"+par]
+            self.parameters[par] -= lr*grads["d"+par]
 
-    def train(self, trainloader, testloader,
-              num_epoch=10, lr=0.1, lam=0.0000):
+    def train(self, train, test, num_epoch=10, lr=0.1, lam=0.0000):
+
+        trainloader = torch.utils.data.DataLoader(
+            train, batch_size=batch_size, shuffle=True)
+        testloader = torch.utils.data.DataLoader(
+            valid, batch_size=batch_size, shuffle=False)
+        
         acc_train = []
         acc_test = []
         for epoch in range(num_epoch):

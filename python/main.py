@@ -15,9 +15,8 @@ import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import os
-import cnn_catsdogs as cnncd
-import cnn_mnist as cnnmnist
-import mlp
+from cnn import ConvNet
+from mlp import NN
 if torch.cuda.is_available():
     import cupy as np
 else:
@@ -64,33 +63,37 @@ if __name__ == '__main__':
 
     # Create, load and split the datas.
     cat_dog_data = dataset(transforms=transform)
+    split = [
+        int(0.8*len(cat_dog_data)),
+        len(cat_dog_data)-int(0.8*len(cat_dog_data))
+        ]
+    cd_train, cd_valid = torch.utils.data.dataset.random_split(
+                cat_dog_data, split)
+
     mnist_train = torchvision.datasets.MNIST(
         root='./data', train=True, download=True, transform=transform)
-    trainloader = torch.utils.data.DataLoader(
-        mnist_train, batch_size=256, shuffle=True)
     mnist_test = torchvision.datasets.MNIST(
         root='./data', train=False, download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(
-        mnist_test, batch_size=256, shuffle=False)
+    
     # Create the models
+    cnn_cd = ConvNet().to(device)
+    neural_network = NN()
+    cnn_mnist = ConvNet().to(device)
 
-    CNNDC = cnncd.ConvNet().to(device)
-    MLP = mlp.NN()
-    CNNMNIST = cnnmnist.ConvNet().to(device)
     if args.model is None:
-        acc_train, acc_test = MLP.train(trainloader, testloader)
-        out_dc = CNNDC.train_(cat_dog_data, device)
-        out_mnist = CNNMNIST.train_(trainloader, testloader, device)
+        acc_train, acc_test = neural_network.train(mnist_train, mnist_test)
+        out_dc = cnn_cd.train_(cd_train, cd_valid, device, num_epoch=70)
+        out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
 
     elif args.model == "mlp":
         print("MLP training:\n")
-        acc_train, acc_test = MLP.train(trainloader, testloader)
+        acc_train, acc_test = neural_network.train(mnist_train, mnist_test)
     elif args.model == "cnndc":
         print("CNN training:\n")
-        out_dc = CNNDC.train_(cat_dog_data, device)
+        out_dc = cnn_cd.train_(cd_train, cd_valid, device, num_epoch=70)
     elif args.model == "cnnmnist":
         print("CNN training:\n")
-        out_mnist = CNNMNIST.train_(trainloader, testloader, device)
+        out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
 
     # plt.figure()
     # plt.plot(range(1,n_epoch+1),e_train, 'sk-', label='Train')
