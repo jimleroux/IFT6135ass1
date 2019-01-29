@@ -95,7 +95,7 @@ if __name__ == '__main__':
     if args.model is None:
         acc_train, acc_test = neural_network.train(mnist_train, mnist_test)
         out_dc = cnn_cd.train_(
-            cd_train, cd_valid, device, num_epoch=70, lr=0.01)
+            cd_train, cd_valid, device, num_epoch=70, lr=0.01, batchsize=64)
         out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
     elif args.model == "mlp":
         print("MLP training:\n")
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     elif args.model == "cnndc":
         print("CNN training cats and dods:\n")
         out_dc = cnn_cd.train_(
-            cd_train, cd_valid, device, num_epoch=70, lr=0.01)
+            cd_train, cd_valid, device, num_epoch=70, lr=0.01, batchsize=64)
     elif args.model == "cnnmnist":
         print("CNN training mnist:\n")
         out_mnist = cnn_mnist.train_(mnist_train, mnist_test, device)
