@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 
-"""
-HW1
-"""
-
 __authors__ = "Jimmy Leroux"
 __version__ = "1.0"
 __maintainer__ = "Jimmy Leroux"
 __studentid__ = "1024610"
 
 import argparse
+import os
+
+import matplotlib.pyplot as plt
 import torch
 import torchvision
 import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-import os
+
 from cnn import ConvNet
 from mlp import NN
+
 if torch.cuda.is_available():
     import cupy as np
 else:
@@ -59,6 +58,7 @@ if __name__ == '__main__':
         "-m", "--model", help="Choose mlp cnndc or cnnmnist, default is both",
         type=str)
     args = parser.parse_args()
+    print(args)
     # ------------------------------------------------------------------------
     # Define the transformations we apply to the images, both the cat and
     # dog dataset and mnist.
