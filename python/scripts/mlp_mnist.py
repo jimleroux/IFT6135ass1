@@ -12,8 +12,6 @@ from datasets.dataset import Dataset, data_split, import_mnist
 from models.mlp import NeuralNetwork
 
 
-
-
 def main(args):
     epoch = args.epoch
     lr = args.lr

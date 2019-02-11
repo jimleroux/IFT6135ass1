@@ -11,7 +11,6 @@ from datasets.dataset import Dataset, data_split
 from models.cnn import ConvNet
 
 
-
 def main(args):
     epoch = args.epoch
     lr = args.lr

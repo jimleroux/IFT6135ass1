@@ -11,9 +11,6 @@ from datasets.dataset import Dataset, data_split, import_mnist
 from models.cnn import ConvNet
 
 
-
-
-
 def main(args):
     epoch = args.epoch
     lr = args.lr
