@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+sys.path.insert(0, "../")
 
 import numpy as np
 import torch
@@ -10,7 +11,6 @@ import torchvision.transforms as transforms
 from datasets.dataset import Dataset, data_split, import_mnist
 from models.mlp import NeuralNetwork
 
-sys.path.insert(0, "../")
 
 
 
