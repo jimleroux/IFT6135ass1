@@ -1,16 +1,14 @@
 import argparse
 import os
 import sys
-sys.path.insert(0, "../models")
-sys.path.insert(0, "../datasets")
-
+sys.path.insert(0, "../")
 import torch
 import torchvision
 import torchvision.transforms as transforms
 
-from dataset import Dataset
-from dataset import data_split
-from cnn import ConvNet
+from datasets.dataset import Dataset
+from datasets.dataset import data_split
+from models.cnn import ConvNet
 
 def main(args):
     epoch = args.epoch
