@@ -1,17 +1,18 @@
 import argparse
 import os
 import sys
-sys.path.insert(0, "../")
 
+import numpy as np
 import torch
 import torchvision
 import torchvision.transforms as transforms
 
-from datasets.dataset import Dataset
-from datasets.dataset import data_split
+from datasets.dataset import Dataset, data_split, import_mnist
 from models.mlp import NeuralNetwork
-from datasets.dataset import import_mnist
-import numpy as np
+
+sys.path.insert(0, "../")
+
+
 
 def main(args):
     epoch = args.epoch
