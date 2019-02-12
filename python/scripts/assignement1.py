@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
-        default=10, type=int
+        default=1, type=int
     )
     parser.add_argument(
         "--lr", help="Choose the learning rate",
@@ -26,4 +26,4 @@ if __name__ == "__main__":
         type=str
     )
     args = parser.parse_args()
-    
+    _, _, loss_train, loss_test = mlp_mnist.main(args)
