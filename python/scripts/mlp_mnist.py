@@ -28,7 +28,6 @@ def main(args):
     mlp = NeuralNetwork()
     out = mlp.train(
         train, valid, num_epoch=epoch, lr=lr, batchsize=batch)
-    save(mlp)
     return out
 
 if __name__ == "__main__":

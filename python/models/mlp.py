@@ -123,7 +123,7 @@ class NeuralNetwork(object):
             + lam*np.sum(self.parameters["W1"]**2)\
             + lam*np.sum(self.parameters["W2"]**2)\
             + lam*np.sum(self.parameters["W3"]**2)
-        loss *= cache["X"].shape[1]
+        # loss *= cache["X"].shape[1]
         return loss
 
     def softmax(self, X):
