@@ -10,3 +10,4 @@ def plot_inits(**datas):
     for name, data in datas.items():
         plt.plot(data, label=name, marker="s")
     plt.legend()
+    

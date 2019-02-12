@@ -263,8 +263,8 @@ class NeuralNetwork(object):
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
                 losses += self.loss(labels, cache, lam)
-            acc_train.append(float(correct/total)*100)
-            loss_train.append(float(losses))
+            acc_train.append(float(correct/total) * 100)
+            loss_train.append(float(losses) / total)
             
             correct = 0.
             total = 0.
@@ -278,8 +278,8 @@ class NeuralNetwork(object):
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
                 losses += self.loss(labels, cache, lam)
-            acc_test.append(float(correct/total)*100)
-            loss_test.append(float(losses))
+            acc_test.append(float(correct/total) * 100)
+            loss_test.append(float(losses) / total)
             print("Accuracy train: {0:.2f}, Accuracy valid: {1:.2f}".format(
                 acc_train[epoch], acc_test[epoch]))
         return acc_train, acc_test, loss_train, loss_test

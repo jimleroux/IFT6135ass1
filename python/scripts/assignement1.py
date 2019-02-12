@@ -1,10 +1,15 @@
 import argparse
-import mlp_mnist
-import cnn_mnist
-import cats_dog
 import sys
+
+import matplotlib.pyplot as plt
+
+import cats_dog
+import cnn_mnist
+import mlp_mnist
+
 sys.path.insert(0, "../")
 from utils.plot_learning_curves import plot_inits
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -26,4 +31,16 @@ if __name__ == "__main__":
         type=str
     )
     args = parser.parse_args()
-    _, _, loss_train, loss_test = mlp_mnist.main(args)
+    args.init = "glorot"
+    _, _, loss_train_glorot, _ = mlp_mnist.main(args)
+    args.init = "uniform"
+    _, _, loss_train_uniform, _ = mlp_mnist.main(args)
+    args.init = "normal"
+    _, _, loss_train_normal, _ = mlp_mnist.main(args)
+    datas = {
+        "glorot": loss_train_glorot,
+        "uniform": loss_train_uniform,
+        "normal": loss_train_normal
+    }
+    plot_inits(datas)
+    plt.show()
