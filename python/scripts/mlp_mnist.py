@@ -10,24 +10,25 @@ import torchvision.transforms as transforms
 
 from datasets.dataset import Dataset, data_split, import_mnist
 from models.mlp import NeuralNetwork
-
+from utils.model_save_load import load, save
 
 def main(args):
     epoch = args.epoch
     lr = args.lr
     batch = args.batch
+    loading = args.loading
     np.random.seed(10)
-    
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(), transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
-
+  
     train, valid = import_mnist(transform)
     mlp = NeuralNetwork()
     out = mlp.train(
         train, valid, num_epoch=epoch, lr=lr, batchsize=batch)
+    save(mlp)
     return out
 
 if __name__ == "__main__":

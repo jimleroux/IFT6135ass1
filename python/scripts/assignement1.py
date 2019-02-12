@@ -1,5 +1,6 @@
 import argparse
 import sys
+sys.path.insert(0, "../")
 
 import matplotlib.pyplot as plt
 
@@ -7,7 +8,6 @@ import cats_dog
 import cnn_mnist
 import mlp_mnist
 
-sys.path.insert(0, "../")
 from utils.plot_learning_curves import plot_inits
 
 
