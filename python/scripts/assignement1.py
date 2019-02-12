@@ -30,6 +30,10 @@ if __name__ == "__main__":
         default="glorot", choices=["glorot", "uniform", "normal"],
         type=str
     )
+    parser.add_argument(
+        "--loading", help="Load a model or not",
+        action="store_true"
+    )
     args = parser.parse_args()
     args.init = "glorot"
     _, _, loss_train_glorot, _ = mlp_mnist.main(args)
