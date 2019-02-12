@@ -10,7 +10,7 @@ def plot_inits(datas):
     plt.rc('axes', labelsize=12)
     plt.figure()
     for name, data in datas.items():
-        plt.plot(range(1,len(data)+1), data, label=name, marker="-s")
+        plt.plot(range(1,len(data)+1), data, label=name, marker="s")
     plt.xlabel("Epoch")
     plt.ylabel("Mean loss")
     plt.legend()
