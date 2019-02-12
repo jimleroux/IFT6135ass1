@@ -42,7 +42,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--batch", help="Choose batchsize",
-        default=64, type=int
+        default=256, type=int
     )
     args = parser.parse_args()
     main(args)
