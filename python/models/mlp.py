@@ -46,8 +46,8 @@ class NeuralNetwork(object):
                 self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
         if mode == "normal":
             for i in range(1, num_layer):
-                self.parameters["W"+str(i)] = np.random.rand(
-                    self.layers[i], self.layers[i-1])
+                self.parameters["W"+str(i)] = np.random.normal(
+                    size=(self.layers[i], self.layers[i-1]))
                 self.parameters["b"+str(i)] = np.zeros((self.layers[i], 1))
         if mode == "glorot":
             for i in range(1, num_layer):
