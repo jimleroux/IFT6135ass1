@@ -9,5 +9,6 @@ def plot_inits(datas):
     plt.figure()
     for name, data in datas.items():
         plt.plot(range(1,len(data)+1), data, label=name, marker="s")
-    plt.xlabel()
+    plt.xlabel("Epoch")
+    plt.ylabel("Mean loss")
     plt.legend()
