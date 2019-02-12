@@ -46,7 +46,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--init", help="Choose the init mode",
-        default="glorot", choice=["glorot", "uniform", "normal"],
+        default="glorot", choices=["glorot", "uniform", "normal"],
         type=str
     )
     args = parser.parse_args()
