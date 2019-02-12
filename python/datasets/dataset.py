@@ -10,11 +10,8 @@ class Dataset(torch.utils.data.dataset.Dataset):
     and __len__.
     """
     def __init__(self, transforms=None):
-        # CURRENT_DIR = os.getcwd()
-        # os.chdir("../dataset/trainset/")
         self.data = torchvision.datasets.ImageFolder(
             "../../dataset/trainset/", transform=transforms)
-        os.chdir(CURRENT_DIR)
 
     def __getitem__(self, idx):
         return self.data[idx]
