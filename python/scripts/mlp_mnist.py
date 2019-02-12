@@ -28,17 +28,26 @@ def main(args):
     mlp = NeuralNetwork()
     out = mlp.train(
         train, valid, num_epoch=epoch, lr=lr, batchsize=batch)
+    return out
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
-        default=70, type=int)
+        default=10, type=int
+    )
     parser.add_argument(
         "--lr", help="Choose the learning rate",
-        default=0.01, type=float)
+        default=0.01, type=float
+    )
     parser.add_argument(
         "--batch", help="Choose batchsize",
-        default=256, type=int)
+        default=256, type=int
+    )
+    parser.add_argument(
+        "--init", help="Choose the init mode",
+        default="glorot", choice=["glorot", "uniform", "normal"],
+        type=str
+    )
     args = parser.parse_args()
     main(args)

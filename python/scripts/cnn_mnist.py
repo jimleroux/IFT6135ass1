@@ -28,17 +28,21 @@ def main(args):
     cnn = ConvNet("mnist").to(device)
     out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)
-
+    return out
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
-        default=70, type=int)
+        default=70, type=int
+    )
     parser.add_argument(
         "--lr", help="Choose the learning rate",
-        default=0.01, type=float)
+        default=0.01, type=float
+    )
     parser.add_argument(
         "--batch", help="Choose batchsize",
-        default=64, type=int)
+        default=64, type=int
+    )
     args = parser.parse_args()
     main(args)
