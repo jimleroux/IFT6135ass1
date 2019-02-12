@@ -238,6 +238,8 @@ class NeuralNetwork(object):
 
         acc_train = []
         acc_test = []
+        loss_train = []
+        loss_test = []
         for epoch in range(num_epoch):
             print("Epoch:{}".format(epoch))
             for data in trainloader:
@@ -251,6 +253,7 @@ class NeuralNetwork(object):
             # Calculate the accuracy
             correct = 0.
             total = 0.
+            losses = 0.
             for data in trainloader:
                 inputs, labels = data
                 inputs = self.transform_input(inputs)
@@ -259,12 +262,13 @@ class NeuralNetwork(object):
                 preds = np.argmax(cache["a3"], axis=0)
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
-                if total > 5000:
-                    break
+                losses += self.loss(labels, cache, lam)
             acc_train.append(float(correct/total)*100)
-
+            loss_train.append(float(losses))
+            
             correct = 0.
             total = 0.
+            losses = 0.
             for data in testloader:
                 inputs, labels = data
                 inputs = self.transform_input(inputs)
@@ -273,12 +277,12 @@ class NeuralNetwork(object):
                 preds = np.argmax(cache["a3"], axis=0)
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
-                if total > 5000:
-                    break
+                losses += self.loss(labels, cache, lam)
             acc_test.append(float(correct/total)*100)
+            loss_test.append(float(losses))
             print("Accuracy train: {0:.2f}, Accuracy valid: {1:.2f}".format(
                 acc_train[epoch], acc_test[epoch]))
-        return acc_train, acc_test
+        return acc_train, acc_test, loss_train, loss_test
 
     def test(self):
         pass
