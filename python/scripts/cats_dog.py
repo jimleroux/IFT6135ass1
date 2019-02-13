@@ -34,15 +34,15 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--epoch", help="Choose the number of epoch",
+        "--epoch", help="Choose the number of epoch.",
         default=70, type=int
     )
     parser.add_argument(
-        "--lr", help="Choose the learning rate",
+        "--lr", help="Choose the learning rate.",
         default=0.1, type=float
     )
     parser.add_argument(
-        "--batch", help="Choose batchsize",
+        "--batch", help="Choose batchsize.",
         default=256, type=int
     )
     args = parser.parse_args()
