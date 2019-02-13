@@ -39,7 +39,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--lr", help="Choose the learning rate",
-        default=0.01, type=float
+        default=0.1, type=float
     )
     parser.add_argument(
         "--batch", help="Choose batchsize",
