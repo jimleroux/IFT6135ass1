@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
-        default=70, type=int
+        default=10, type=int
     )
     parser.add_argument(
         "--lr", help="Choose the learning rate",

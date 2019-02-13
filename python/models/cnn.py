@@ -183,9 +183,9 @@ class ConvNet(nn.Module):
             loss_valid.append(running_loss_valid / total)
 
             print('Epoch: {}'.format(epoch))
-            print('Train loss: {0:.4f} Train error: {1:.2f}'.format(
+            print('Train loss: {0:.6f} Train error: {1:.4f}'.format(
                 loss_train[epoch], err_train[epoch]))
-            print('Test loss: {0:.4f} Test error: {1:.2f}'.format(
+            print('Test loss: {0:.6f} Test error: {1:.4f}'.format(
                 loss_valid[epoch], err_valid[epoch]))
 
         print('Finished Training')
