@@ -49,6 +49,10 @@ if __name__ == "__main__":
         action="store_true"
     )
     parser.add_argument(
+        "--mlp_mnist_97", help="Specify to train and plot a 97% mlp.",
+        action="store_true"
+    )
+    parser.add_argument(
         "--cnn_mnist", help="Specify to train.",
         action="store_true"
     )
@@ -77,7 +81,16 @@ if __name__ == "__main__":
                 "normal": loss_train_normal
             }
             plot_loss(datas, graphname="initgraph", ylabel="Mean loss")
-    
+    if args.mlp_mnist_97:
+        temp = args.epoch
+        args.epoch = 100
+        err_train, err_valid, _, _ = mlp_mnist.main(args)
+        args.epoch = temp
+        datas = {
+            "Train": err_train,
+            "Test": err_test
+        }
+        plt_loss(datas, graphname="mlp97", ylabel="Error")
     if args.cnn_mnist:
         loss_train_cnn, _, err_train_cnn, err_valid_cnn = cnn_mnist.main(args)
         if args.mlp_mnist:
