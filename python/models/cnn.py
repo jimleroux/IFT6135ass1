@@ -1,4 +1,5 @@
-  # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+import csv
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
@@ -195,3 +196,26 @@ class ConvNet(nn.Module):
 
         print('Finished Training')
         return (loss_train, loss_valid, err_train, err_valid)
+
+    def prediction(self, datas, batchsize):
+        testloader = torch.utils.data.DataLoader(
+            train, batch_size=batchsize, shuffle=False)
+        predictions = []
+        classes = {
+            0: "Cat",
+            1: "Dog"
+        }
+        self.eval()
+        with torch.no_grad():
+            for datas in testloader:
+                inputs, _ = datas
+                outputs = self(inputs.to(device))
+                _, predicted = torch.max(outputs.data, 1)
+                predictions.extend(predicted.tolist())
+        with open('../../submission/submission.csv', mode='w') as submission:
+            writer = csv.writer(submission, delimiter=',',
+                quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(["id", "label"])
+            for i in range(len(prediction)):
+                predictions[i] = classes[predictions[i]]
+                writer.writerow([str(i+1), predictions[i]])
