@@ -33,4 +33,8 @@ def plot_grad_check(model, data):
     
     plt.figure()
     plt.loglog(sorted(N), maxes, marker="s")
+    plt.xlabel("N")
+    plt.ylabel(r"$\max_{1 \leq i \leq p} |\nabla^N_i"
+        + r"-\frac{\partial L}{\partial \theta_i}|$")
+    plt.tight_layout()
     plt.savefig("../../graphs/gradcheck.png", dpi=500)
