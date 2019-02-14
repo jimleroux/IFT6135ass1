@@ -7,7 +7,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
-from datasets.dataset import Dataset, data_split
+from datasets.dataset import Dataset, data_split, TestDataset
 from models.cnn import ConvNet
 
 
@@ -25,10 +25,12 @@ def main(args):
         ])
     
     cat_dog_data = Dataset(transforms=transform)
+    submission = TestDataset()
     train, valid = data_split(cat_dog_data)
-    cnn_cd = ConvNet("cat_and_dogs").to(device)
-    out = cnn_cd.train_(
+    cnn = ConvNet("cat_and_dogs").to(device)
+    out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)
+    cnn.prediction(submission, batchsize)
     return out
 
 if __name__ == "__main__":
