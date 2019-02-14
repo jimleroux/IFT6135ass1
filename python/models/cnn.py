@@ -47,23 +47,23 @@ class ConvNet(nn.Module):
 
         if self.dataset == "mnist":
             self.convlayers = nn.Sequential(
-                nn.Conv2d(1, 64, 3, padding=0),
+                nn.Conv2d(1, 32, 3, padding=0),
+                nn.ReLU(),
+                nn.Conv2d(32, 64, 3, padding=0),
+                nn.ReLU(),
+                nn.MaxPool2d(2, 2),
+                nn.Conv2d(64, 64, 3, padding=0),
                 nn.ReLU(),
                 nn.Conv2d(64, 128, 3, padding=0),
                 nn.ReLU(),
                 nn.MaxPool2d(2, 2),
-                nn.Conv2d(128, 128, 3, padding=0),
-                nn.ReLU(),
                 nn.Conv2d(128, 256, 3, padding=0),
-                nn.ReLU(),
-                nn.MaxPool2d(2, 2),
-                nn.Conv2d(256, 256, 3, padding=0),
                 nn.ReLU())
             # 26 24 12 10 8 4 2
             self.denses = nn.Sequential(
-                nn.Linear(256 * 2 * 2, 512),
+                nn.Linear(256 * 2 * 2, 256),
                 nn.ReLU(),
-                nn.Linear(512, 10))
+                nn.Linear(256, 10))
 
     def forward(self, x):
         """
@@ -139,7 +139,11 @@ class ConvNet(nn.Module):
             # Set the model in train mode.
             self.train()
             # Define the optimizer as SDG.
-            optimizer = optim.SGD(self.parameters(), lr=lr)
+            if self.dataset == "cat_and_dogs":
+                lrd = lr * (1 / (1 + 50*epoch/num_epoch))
+                optimizer = optim.SGD(self.parameters(), lr=lrd)
+            else:
+                optimizer = optim.SGD(self.parameters(), lr=lr)
             for datas in trainloader:
                 inputs, labels = datas
                 optimizer.zero_grad()
@@ -162,7 +166,8 @@ class ConvNet(nn.Module):
                     correct += (predicted == labels.to(device)).sum(
                         ).item()
                     loss = criterion(outputs, labels.to(device))
-                    running_loss_train += loss.item()
+
+                    running_loss_train += loss.item() * labels.size(0)
             err_train.append(1 - correct / total)
             loss_train.append(running_loss_train / total)
 
@@ -178,7 +183,7 @@ class ConvNet(nn.Module):
                     correct += (predicted == labels.to(device)).sum(
                         ).item()
                     loss = criterion(outputs, labels.to(device))
-                    running_loss_valid += loss.item()
+                    running_loss_valid += loss.item() * labels.size(0)
             err_valid.append(1 - correct / total)
             loss_valid.append(running_loss_valid / total)
 
