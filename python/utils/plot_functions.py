@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cupy as cp
 
 
-def plot_loss(datas, name, ylabel):
+def plot_loss(datas, graphname, ylabel):
     plt.style.use('ggplot')
     plt.rc('xtick', labelsize=12)
     plt.rc('ytick', labelsize=12)
@@ -15,7 +15,7 @@ def plot_loss(datas, name, ylabel):
     plt.xlabel("Epoch")
     plt.ylabel(ylabel)
     plt.legend()
-    plt.savefig("../../graphs/"+name+".png", dpi=500)
+    plt.savefig("../../graphs/"+graphname+".png", dpi=500)
 
 def plot_grad_check(model, data):
     plt.style.use('ggplot')

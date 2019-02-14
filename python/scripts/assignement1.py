@@ -17,8 +17,7 @@ from utils.plot_functions import plot_loss
 if __name__ == "__main__":
     np.random.seed(10)
     cp.random.seed(10)
-    torch.manual_seed(10)
-       
+    torch.manual_seed(10)   
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
@@ -77,7 +76,7 @@ if __name__ == "__main__":
                 "uniform": loss_train_uniform,
                 "normal": loss_train_normal
             }
-            plot_loss(datas, name="initgraph", ylabel="Mean loss")
+            plot_loss(datas, graphname="initgraph", ylabel="Mean loss")
     
     if args.cnn_mnist:
         loss_train_cnn, _, err_train_cnn, err_valid_cnn = cnn_mnist.main(args)
@@ -88,7 +87,7 @@ if __name__ == "__main__":
                 "CNN train": err_train_cnn,
                 "CNN valid": err_valid_cnn
             }
-            plot_loss(datas, name="mlpvscnn", ylabel="Error")
+            plot_loss(datas, graphname="mlpvscnn", ylabel="Error")
     
     if args.cnn_kaggle:
         _ = cats_dog.main(args)
