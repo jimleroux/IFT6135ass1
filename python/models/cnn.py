@@ -141,7 +141,7 @@ class ConvNet(nn.Module):
             self.train()
             # Define the optimizer as SDG.
             if self.dataset == "cat_and_dogs":
-                lrd = lr * (1 / (1 + 50*epoch/num_epoch))
+                lrd = lr * (1 / (1 + 100*epoch/num_epoch))
                 optimizer = optim.SGD(self.parameters(), lr=lrd)
             else:
                 optimizer = optim.SGD(self.parameters(), lr=lr)
@@ -197,9 +197,9 @@ class ConvNet(nn.Module):
         print('Finished Training')
         return (loss_train, loss_valid, err_train, err_valid)
 
-    def prediction(self, datas, batchsize):
+    def prediction(self, datas, batchsize, device):
         testloader = torch.utils.data.DataLoader(
-            train, batch_size=batchsize, shuffle=False)
+            datas, batch_size=batchsize, shuffle=False)
         predictions = []
         classes = {
             0: "Cat",
@@ -214,8 +214,8 @@ class ConvNet(nn.Module):
                 predictions.extend(predicted.tolist())
         with open('../../submission/submission.csv', mode='w') as submission:
             writer = csv.writer(submission, delimiter=',',
-                quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             writer.writerow(["id", "label"])
-            for i in range(len(prediction)):
+            for i in range(len(predictions)):
                 predictions[i] = classes[predictions[i]]
                 writer.writerow([str(i+1), predictions[i]])

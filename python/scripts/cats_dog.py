@@ -25,15 +25,16 @@ def main(args):
         ])
     
     normalize = transforms.Compose([
+        transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
     cat_dog_data = Dataset(transforms=transform)
-    submission = TestDataset()
+    submission = TestDataset(transforms=normalize)
     train, valid = data_split(cat_dog_data)
     cnn = ConvNet("cat_and_dogs").to(device)
     out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)
-    cnn.prediction(submission, batchsize)
+    cnn.prediction(submission, batch, device)
     return out
 
 if __name__ == "__main__":
