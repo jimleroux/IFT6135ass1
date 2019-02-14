@@ -24,6 +24,9 @@ def main(args):
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
     
+    normalize = transforms.Compose([
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        ])
     cat_dog_data = Dataset(transforms=transform)
     submission = TestDataset()
     train, valid = data_split(cat_dog_data)
