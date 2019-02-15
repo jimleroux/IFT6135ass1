@@ -207,8 +207,8 @@ class ConvNet(nn.Module):
         }
         self.eval()
         with torch.no_grad():
-            for datas in testloader:
-                inputs, _ = datas
+            for dat in testloader:
+                inputs, _ = data
                 outputs = self(inputs.to(device))
                 _, predicted = torch.max(outputs.data, 1)
                 predictions.extend(predicted.tolist())

@@ -32,8 +32,14 @@ def main(args):
     submission = TestDataset(transforms=normalize)
     train, valid = data_split(cat_dog_data)
     cnn = ConvNet("cat_and_dogs").to(device)
+    for p in cnn.parameters():
+        print(p.data)
+        break
     out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)
+    for p in cnn.parameters():
+        print(p.data)
+        break
     cnn.prediction(submission, batch, device)
     return out
 
