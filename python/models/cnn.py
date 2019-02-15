@@ -208,8 +208,9 @@ class ConvNet(nn.Module):
         self.eval()
         with torch.no_grad():
             for dat in testloader:
-                inputs, _ = data
+                inputs, _ = dat
                 outputs = self(inputs.to(device))
+                outputs = nn.Softmax(outputs)
                 _, predicted = torch.max(outputs.data, 1)
                 predictions.extend(predicted.tolist())
         with open('../../submission/submission.csv', mode='w') as submission:
