@@ -224,7 +224,9 @@ class ConvNet(nn.Module):
             for dat in testloader:
                 inputs, _ = dat
                 outputs = self(inputs.to(device))
+                print(outputs.data)
                 _, predicted = torch.max(outputs.data, 1)
+                print(predicted)
                 predictions.extend(predicted.tolist())
         with open('../../submission/submission.csv', mode='w') as submission:
             writer = csv.writer(submission, delimiter=',',
