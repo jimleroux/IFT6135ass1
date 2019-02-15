@@ -13,8 +13,7 @@ class NeuralNetwork(object):
     """
 
     def __init__(
-            self, hidden_dims=(1024, 2048), n_hidden=2,
-            mode='train', datapath=None, model_path=None):
+            self, hidden_dims=(1024, 2048), n_hidden=2):
         """
         Parameters:
         -----------
@@ -194,6 +193,30 @@ class NeuralNetwork(object):
             }
         return grads
 
+    def grad_check(self, X, Y, epsilon):
+        cache = self.forward(X)
+        grad = self.backward(cache, Y, 0)
+        gradtest = np.zeros(grad["dW3"].shape)
+
+        for i in range(gradtest.shape[0]):
+            for j in range(10):
+                #  Add to the parameters epsilon
+                self.parameters["W3"][i, j] += epsilon
+                cache = self.forward(X)
+                #  Calculate the loss
+                loss1 = self.loss(Y, cache, 0)
+                #  Move back the parameters
+                self.parameters["W3"][i, j] -= 2 * epsilon
+                cache = self.forward(X)
+                #  Recalculate the loss
+                loss2 = self.loss(Y, cache, 0)
+                #  We divide by X.shape[1] in case we want to check the
+                #  gradient with minibatches.
+                gradtest[i, j] = (loss1-loss2) / (2*epsilon) / X.shape[1]
+                #  We reset the parameters where they were.
+                self.parameters["W3"][i, j] += epsilon
+        return gradtest[:, :10], grad["dW3"][:, :10]
+
     def update(self, grads, lr):
         """
         Update method for the model.
@@ -236,10 +259,11 @@ class NeuralNetwork(object):
         testloader = torch.utils.data.DataLoader(
             test, batch_size=batchsize, shuffle=False)
 
-        acc_train = []
-        acc_test = []
+        err_train = []
+        err_test = []
         loss_train = []
         loss_test = []
+
         for epoch in range(num_epoch):
             print("Epoch:{}".format(epoch))
             for data in trainloader:
@@ -263,7 +287,7 @@ class NeuralNetwork(object):
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
                 losses += self.loss(labels, cache, lam)
-            acc_train.append(float(correct/total) * 100)
+            err_train.append(1 - float(correct/total))
             loss_train.append(float(losses) / total)
             
             correct = 0.
@@ -278,11 +302,11 @@ class NeuralNetwork(object):
                 correct += np.sum(preds == np.argmax(labels, axis=0))
                 total += labels.shape[1]
                 losses += self.loss(labels, cache, lam)
-            acc_test.append(float(correct/total) * 100)
+            err_test.append(1 - float(correct/total))
             loss_test.append(float(losses) / total)
-            print("Accuracy train: {0:.2f}, Accuracy valid: {1:.2f}".format(
-                acc_train[epoch], acc_test[epoch]))
-        return acc_train, acc_test, loss_train, loss_test
+            print("Error train: {0:.2f}, Error valid: {1:.2f}".format(
+                err_train[epoch], err_test[epoch]))
+        return err_train, err_test, loss_train, loss_test
 
     def test(self):
         pass

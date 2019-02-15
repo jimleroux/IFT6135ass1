@@ -7,11 +7,25 @@ import torchvision
 class Dataset(torch.utils.data.dataset.Dataset):
     """
     Class implementing a pytorch dataset. We need to define the __getitem__
-    and __len__.
+    and __len__. The dataset is automaticly labeled by the folder name.
     """
     def __init__(self, transforms=None):
         self.data = torchvision.datasets.ImageFolder(
             "../../dataset/trainset/", transform=transforms)
+
+    def __getitem__(self, idx):
+        return self.data[idx]
+
+    def __len__(self):
+        return len(self.data)
+
+class TestDataset(torch.utils.data.dataset.Dataset):
+    """
+    Class implementing a pytorch dataset. Here it's a test dataset.
+    """
+    def __init__(self, transforms=None):
+        self.data = torchvision.datasets.ImageFolder(
+            "../../dataset/testset/", transform=transforms)
 
     def __getitem__(self, idx):
         return self.data[idx]

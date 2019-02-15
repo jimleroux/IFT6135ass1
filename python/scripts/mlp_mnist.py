@@ -10,13 +10,14 @@ import torchvision.transforms as transforms
 
 from datasets.dataset import Dataset, data_split, import_mnist
 from models.mlp import NeuralNetwork
+from utils.plot_functions import plot_grad_check
 from utils.model_save_load import load, save
 
 def main(args):
     epoch = args.epoch
     lr = args.lr
     batch = args.batch
-    loading = args.loading
+    grad_check = args.grad_check
     np.random.seed(10)
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
@@ -26,6 +27,8 @@ def main(args):
   
     train, valid = import_mnist(transform)
     mlp = NeuralNetwork()
+    if grad_check:
+        plot_grad_check(mlp, train)
     out = mlp.train(
         train, valid, num_epoch=epoch, lr=lr, batchsize=batch)
     return out
@@ -48,6 +51,10 @@ if __name__ == "__main__":
         "--init", help="Choose the init mode",
         default="glorot", choices=["glorot", "uniform", "normal"],
         type=str
+    )
+    parser.add_argument(
+        "--grad_check", help="Specify to grad check.",
+        action="store_true"
     )
     args = parser.parse_args()
     main(args)

@@ -3,6 +3,7 @@ import os
 import sys
 sys.path.insert(0, "../")
 
+import numpy as np
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -26,6 +27,9 @@ def main(args):
 
     train, valid = import_mnist(transform)
     cnn = ConvNet("mnist").to(device)
+    model_parameters = filter(lambda p: p.requires_grad, cnn.parameters())
+    params = sum([np.prod(p.size()) for p in model_parameters])
+    print("CNN has {} parameters".format(params))
     out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)
     return out
@@ -34,7 +38,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--epoch", help="Choose the number of epoch",
-        default=70, type=int
+        default=10, type=int
     )
     parser.add_argument(
         "--lr", help="Choose the learning rate",
