@@ -222,10 +222,12 @@ class ConvNet(nn.Module):
             writer = csv.writer(submission, delimiter=',',
                 quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             writer.writerow(["id", "label"])
-            mapping = [str(i) for i in range(len(predictions))]
-            for i in range(len(predictions)):
-                pred = classes[predictions[int(mapping[i])]]
-                writer.writerow([str(i+1), pred])
+            mapping = [str(i) for i in range(1, len(predictions)+1)]
+            mapping.sort()
+            reverse_map = {int(mapping[i]):i for i in range(len(predictions))}
+            for i in range(1, len(predictions)+1):
+                pred = classes[predictions[reverse_map[i]]]
+                writer.writerow([str(i), pred])
         return (loss_train, loss_valid, err_train, err_valid)
 
     def prediction(self, datas, batchsize, device):
