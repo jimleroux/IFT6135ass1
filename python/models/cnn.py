@@ -20,35 +20,26 @@ class ConvNet(nn.Module):
             self.convlayers = nn.Sequential(
                 nn.Conv2d(3, 64, 5, padding=0),
                 nn.ReLU(),
-                nn.BatchNorm2d(64),
                 nn.Conv2d(64, 64, 5, padding=0),
                 nn.ReLU(),
-                nn.BatchNorm2d(64),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(64, 128, 5, padding=0),
                 nn.ReLU(),
-                nn.BatchNorm2d(128),
                 nn.Conv2d(128, 128, 5, padding=0),
                 nn.ReLU(),
-                nn.BatchNorm2d(128),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(128, 256, 3, padding=0),
                 nn.ReLU(),
-                nn.BatchNorm2d(256),
                 nn.Conv2d(256, 256, 3, padding=1),
                 nn.ReLU(),
-                nn.BatchNorm2d(256),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(256, 512, 3, padding=1),
-                nn.ReLU(),
-                nn.BatchNorm2d(512))
+                nn.ReLU())
             # 60 56 28 24 20 10
             # Define the dense layers at the end of the network. These are
             # used to make the final predictions.
             self.denses = nn.Sequential(
                 nn.Linear(512 * 4 * 4, 1024),
-                nn.BatchNorm1d(1024),
-                nn.Dropout(p=0.20),
                 nn.ReLU(),
                 nn.Linear(1024, 2))
             # Note that there is no activation for the final layer.
@@ -153,7 +144,7 @@ class ConvNet(nn.Module):
                 lrd = lr * (1 / (1 + 10*epoch/num_epoch))
                 optimizer = optim.SGD(self.parameters(), lr=lrd)
             else:
-                optimizer = optim.Adam(self.parameters(), lr=lr)
+                optimizer = optim.SGD(self.parameters(), lr=lr)
             for datas in trainloader:
                 inputs, labels = datas
                 optimizer.zero_grad()
@@ -214,24 +205,21 @@ class ConvNet(nn.Module):
             0: "Cat",
             1: "Dog"
         }
-        print(datas[0][0].shape)
-        print(datas[0][0].data)
-        
-        #plt.imshow(datas[0][0].view(64,64,3)/255)
-        #plt.show()
+
         self.eval()
         with torch.no_grad():
             for dat in testloader:
                 inputs, _ = dat
                 outputs = self(inputs.to(device))
-                print(outputs.data)
                 _, predicted = torch.max(outputs.data, 1)
-                print(predicted)
                 predictions.extend(predicted.tolist())
         with open('../../submission/submission.csv', mode='w') as submission:
             writer = csv.writer(submission, delimiter=',',
                 quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             writer.writerow(["id", "label"])
-            for i in range(len(predictions)):
-                predictions[i] = classes[predictions[i]]
-                writer.writerow([str(i+1), predictions[i]])
+            mapping = [str(i) for i in range(1, len(predictions)+1)]
+            mapping.sort()
+            reverse_map = {int(mapping[i]):i for i in range(len(predictions))}
+            for i in range(1, len(predictions)+1):
+                pred = classes[predictions[reverse_map[i]]]
+                writer.writerow([str(i), pred])
