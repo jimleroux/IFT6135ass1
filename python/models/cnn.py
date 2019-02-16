@@ -19,27 +19,35 @@ class ConvNet(nn.Module):
             # Define the convolutional layers as well as the activations.
             self.convlayers = nn.Sequential(
                 nn.Conv2d(3, 64, 5, padding=0),
+                nn.BatchNorm2d(64),
                 nn.ReLU(),
                 nn.Conv2d(64, 64, 5, padding=0),
+                nn.BatchNorm2d(64),
                 nn.ReLU(),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(64, 128, 5, padding=0),
+                nn.BatchNorm2d(128),
                 nn.ReLU(),
                 nn.Conv2d(128, 128, 5, padding=0),
+                nn.BatchNorm2d(128),
                 nn.ReLU(),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(128, 256, 3, padding=0),
+                nn.BatchNorm2d(256),
                 nn.ReLU(),
                 nn.Conv2d(256, 256, 3, padding=1),
+                nn.BatchNorm2d(256),
                 nn.ReLU(),
                 nn.MaxPool2d(2, 2),
                 nn.Conv2d(256, 512, 3, padding=1),
+                nn.BatchNorm2d(512),
                 nn.ReLU())
             # 60 56 28 24 20 10
             # Define the dense layers at the end of the network. These are
             # used to make the final predictions.
             self.denses = nn.Sequential(
                 nn.Linear(512 * 4 * 4, 1024),
+                nn.BatchNorm1d(1024),
                 nn.ReLU(),
                 nn.Linear(1024, 2))
             # Note that there is no activation for the final layer.
@@ -100,7 +108,7 @@ class ConvNet(nn.Module):
             return output
 
     def train_(
-            self, train, valid, device, num_epoch=10,
+            self, train, valid, test, device, num_epoch=10,
             lr=0.1, batchsize=256):
         """
         Train function for the network.
@@ -141,8 +149,8 @@ class ConvNet(nn.Module):
             self.train()
             # Define the optimizer as SDG.
             if self.dataset == "cat_and_dogs":
-                lrd = lr * (1 / (1 + 100*epoch/num_epoch))
-                optimizer = optim.SGD(self.parameters(), lr=lrd)
+                lrd = lr * (1 / (1 + 10*epoch/num_epoch))
+                optimizer = optim.Adam(self.parameters(), lr=lrd)
             else:
                 optimizer = optim.SGD(self.parameters(), lr=lr)
             for datas in trainloader:
@@ -161,6 +169,7 @@ class ConvNet(nn.Module):
             with torch.no_grad():
                 for datas in trainloader:
                     inputs, labels = datas
+                    #print(inputs[0],labels)
                     outputs = self(inputs.to(device))
                     _, predicted = torch.max(outputs.data, 1)
                     total += labels.size(0)
@@ -195,6 +204,28 @@ class ConvNet(nn.Module):
                 loss_valid[epoch], err_valid[epoch]))
 
         print('Finished Training')
+        testloader = torch.utils.data.DataLoader(
+            test, batch_size=batchsize, shuffle=False)
+        predictions = []
+        classes = {
+            0: "Cat",
+            1: "Dog"
+        }
+        self.eval()
+        with torch.no_grad():
+            for dat in testloader:
+                inputs, _ = dat
+                outputs = self(inputs.to(device))
+                _, predicted = torch.max(outputs.data, 1)
+                predictions.extend(predicted.tolist())
+        with open('../../submission/submission.csv', mode='w') as submission:
+            writer = csv.writer(submission, delimiter=',',
+                quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
+            writer.writerow(["id", "label"])
+            mapping = [str(i) for i in range(len(predictions))]
+            for i in range(len(predictions)):
+                pred = classes[predictions[int(mapping[i])]]
+                writer.writerow([str(i+1), pred])
         return (loss_train, loss_valid, err_train, err_valid)
 
     def prediction(self, datas, batchsize, device):
@@ -216,6 +247,8 @@ class ConvNet(nn.Module):
             writer = csv.writer(submission, delimiter=',',
                 quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             writer.writerow(["id", "label"])
+            mapping = [str(i) for i in range(len(predictions))]
             for i in range(len(predictions)):
-                predictions[i] = classes[predictions[i]]
-                writer.writerow([str(i+1), predictions[i]])
+                pred = classes[predictions[int(mapping[i])]]
+                writer.writerow([str(i+1), pred])
+        return predictions

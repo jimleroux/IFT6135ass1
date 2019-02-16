@@ -21,17 +21,35 @@ class Dataset(torch.utils.data.dataset.Dataset):
 
 class TestDataset(torch.utils.data.dataset.Dataset):
     """
-    Class implementing a pytorch dataset. Here it's a test dataset.
+    Class implementing a pytorch dataset. We need to define the __getitem__
+    and __len__. The dataset is automaticly labeled by the folder name.
     """
     def __init__(self, transforms=None):
         self.data = torchvision.datasets.ImageFolder(
-            "../../dataset/testset/", transform=transforms)
+            "../../dataset/trainset/", transform=transforms)
 
     def __getitem__(self, idx):
         return self.data[idx]
 
     def __len__(self):
         return len(self.data)
+
+class ImageFolderWithPaths(torchvision.datasets.ImageFolder):
+    """
+    Class implementing a pytorch dataset. Here it's a test dataset.
+    """
+    def __getitem__(self, index):
+        original_tuple = super(ImageFolderWithPaths, self).__getitem__(index)
+        path = self.imgs[index][0]
+        tuple_with_path = (original_tuple + ("../../dataset/testset/",))
+        return tuple_with_path
+
+    #def __getitem__(self, idx):
+    #    original_tuble = super(Ima)
+    #    return self.data[{'image': img, 'filename': file
+    
+    #def __len__(self):
+    #    return len(self.data)
 
 def import_mnist(transform):
     mnist_train = torchvision.datasets.MNIST(root='./data', train=True, 
