@@ -2,7 +2,7 @@ import argparse
 import sys
 sys.path.insert(0, "../")
 
-import cupy as cp
+#import cupy as cp
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -64,6 +64,10 @@ if __name__ == "__main__":
         "--plot_inits", help="Specify to plot inits graph.",
         action="store_true"
     )
+    parser.add_argument(
+        "--plot_kaggle", help="Specify to plot graphs for cnn_kaggle",
+        action="store_true"
+    )
     args = parser.parse_args()
 
     if args.mlp_mnist:
@@ -103,7 +107,17 @@ if __name__ == "__main__":
             plot_loss(datas, graphname="mlpvscnn", ylabel="Error")
     
     if args.cnn_kaggle:
-        _ = cats_dog.main(args)
-    
+        loss_train_kag, loss_valid_kag, err_train_kag, err_valid_kag  = cats_dog.main(args)
+        if args.plot_kaggle:
+            datas_loss = {
+                "Train_loss": loss_train_kag,
+                "Valid_loss": loss_valid_kag,
+            }
+            datas_err = {
+                "Error_train": err_train_kag,
+                "Error_valid": err_train_kag
+            }
+            plot_loss(datas_loss, graphname="cnn Kaggle Loss",  ylabel="Loss")
+            plot_loss(datas_err, graphname="cnn Kaggle Error", ylabel="Error")
     
     plt.show()
