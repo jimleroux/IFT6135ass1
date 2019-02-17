@@ -13,7 +13,7 @@ class NeuralNetwork(object):
     """
 
     def __init__(
-            self, hidden_dims=(1024, 2048), n_hidden=2):
+            self, hidden_dims=(1024, 2048), n_hidden=2, mode="glorot"):
         """
         Parameters:
         -----------
@@ -25,7 +25,8 @@ class NeuralNetwork(object):
         self.hidden_dims = hidden_dims
         self.parameters = {}
         self.layers = [28*28, 512, 512, 10]
-        self.initialize_weights(mode="glorot")
+        self.init = mode
+        self.initialize_weights(mode=self.init)
 
     def initialize_weights(self, mode="glorot"):
         """
@@ -305,7 +306,7 @@ class NeuralNetwork(object):
             err_test.append(1 - float(correct/total))
             loss_test.append(float(losses) / total)
             print("Error train: {0:.2f}, Error valid: {1:.2f}".format(
-                err_train[epoch], err_test[epoch]))
+                loss_train[epoch], loss_test[epoch]))
         return err_train, err_test, loss_train, loss_test
 
     def test(self):

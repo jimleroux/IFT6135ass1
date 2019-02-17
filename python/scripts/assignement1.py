@@ -33,7 +33,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--init", help="Choose the init mode",
-        default="glorot", choices=["glorot", "uniform", "normal"],
+        default="glorot", choices=["glorot", "zero", "normal"],
         type=str
     )
     parser.add_argument(
@@ -70,14 +70,14 @@ if __name__ == "__main__":
         args.init = "glorot"
         err_train, err_valid, loss_train_glorot, _ = mlp_mnist.main(args)
         if args.plot_inits:
-            args.init = "uniform"
+            args.init = "zero"
             args.grad_check = False
-            _, _, loss_train_uniform, _ = mlp_mnist.main(args)
+            _, _, loss_train_zero, _ = mlp_mnist.main(args)
             args.init = "normal"
             _, _, loss_train_normal, _ = mlp_mnist.main(args)
             datas = {
                 "glorot": loss_train_glorot,
-                "uniform": loss_train_uniform,
+                "zero": loss_train_zero,
                 "normal": loss_train_normal
             }
             plot_loss(datas, graphname="initgraph", ylabel="Mean loss")
