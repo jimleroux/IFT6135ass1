@@ -33,6 +33,7 @@ class TestDataset(torch.utils.data.dataset.Dataset):
     def __len__(self):
         return len(self.data)
 
+
 def import_mnist(transform):
     mnist_train = torchvision.datasets.MNIST(root='./data', train=True, 
                                              download=True, transform=transform)

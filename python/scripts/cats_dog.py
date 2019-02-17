@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 
 from datasets.dataset import Dataset, data_split, TestDataset
 from models.cnn import ConvNet
-
+import matplotlib.pyplot as plt
 
 def main(args):
     epoch = args.epoch
@@ -20,7 +20,8 @@ def main(args):
 
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(), transforms.ToTensor(),
+        transforms.RandomVerticalFlip(), 
+        transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
     
@@ -31,6 +32,7 @@ def main(args):
     cat_dog_data = Dataset(transforms=transform)
     submission = TestDataset(transforms=normalize)
     train, valid = data_split(cat_dog_data)
+    print(torch.mean(train[0][0].data))
     cnn = ConvNet("cat_and_dogs").to(device)
     out = cnn.train_(
         train, valid, device, num_epoch=epoch, lr=lr, batchsize=batch)

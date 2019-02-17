@@ -141,7 +141,7 @@ class ConvNet(nn.Module):
             self.train()
             # Define the optimizer as SDG.
             if self.dataset == "cat_and_dogs":
-                lrd = lr * (1 / (1 + 100*epoch/num_epoch))
+                lrd = lr * (1 / (1 + 10*epoch/num_epoch))
                 optimizer = optim.SGD(self.parameters(), lr=lrd)
             else:
                 optimizer = optim.SGD(self.parameters(), lr=lr)
@@ -205,10 +205,11 @@ class ConvNet(nn.Module):
             0: "Cat",
             1: "Dog"
         }
+
         self.eval()
         with torch.no_grad():
-            for datas in testloader:
-                inputs, _ = datas
+            for dat in testloader:
+                inputs, _ = dat
                 outputs = self(inputs.to(device))
                 _, predicted = torch.max(outputs.data, 1)
                 predictions.extend(predicted.tolist())
@@ -216,6 +217,9 @@ class ConvNet(nn.Module):
             writer = csv.writer(submission, delimiter=',',
                 quotechar='"', quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
             writer.writerow(["id", "label"])
-            for i in range(len(predictions)):
-                predictions[i] = classes[predictions[i]]
-                writer.writerow([str(i+1), predictions[i]])
+            mapping = [str(i) for i in range(1, len(predictions)+1)]
+            mapping.sort()
+            reverse_map = {int(mapping[i]):i for i in range(len(predictions))}
+            for i in range(1, len(predictions)+1):
+                pred = classes[predictions[reverse_map[i]]]
+                writer.writerow([str(i), pred])
