@@ -3,6 +3,7 @@ import os
 import torch
 import torchvision
 
+from python.datasets.dataloader import ImageFolder
 
 class Dataset(torch.utils.data.dataset.Dataset):
     """
@@ -24,7 +25,7 @@ class TestDataset(torch.utils.data.dataset.Dataset):
     Class implementing a pytorch dataset. Here it's a test dataset.
     """
     def __init__(self, transforms=None):
-        self.data = torchvision.datasets.ImageFolder(
+        self.data = ImageFolder(
             "../../dataset/testset/", transform=transforms)
 
     def __getitem__(self, idx):
