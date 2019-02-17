@@ -18,6 +18,7 @@ def main(args):
     lr = args.lr
     batch = args.batch
     grad_check = args.grad_check
+    init = args.init
     np.random.seed(10)
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
@@ -26,7 +27,7 @@ def main(args):
         ])
   
     train, valid = import_mnist(transform)
-    mlp = NeuralNetwork()
+    mlp = NeuralNetwork(init=init)
     if grad_check:
         plot_grad_check(mlp, train)
     out = mlp.train(
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--init", help="Choose the init mode",
-        default="glorot", choices=["glorot", "uniform", "normal"],
+        default="glorot", choices=["glorot", "zero", "normal"],
         type=str
     )
     parser.add_argument(
